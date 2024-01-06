@@ -2,9 +2,9 @@
 
 ## 全局模块
 
-在 Windows 上：C:\Python\lib\site-packages
-在 macOS 上：/Library/Python/\<version>/site-packages
-在 Linux 上：/usr/lib/python\<version>/site-packages
+- 在 Windows 上：C:\Python\lib\site-packages
+- 在 macOS 上：/Library/Python/\<version>/site-packages
+- 在 Linux 上：/usr/lib/python\<version>/site-packages
 
 ## 定义模块
 
