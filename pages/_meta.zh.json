@@ -1,0 +1,33 @@
+{
+  "index": {
+    "title": "首页",
+    "display": "hidden",
+    "theme": {
+      "breadcrumb": false,
+      "footer": false,
+      "sidebar": true,
+      "toc": false,
+      "pagination": false
+    }
+  },
+  "- cs": {
+    "title": "计算机基础",
+    "type": "separator"
+  },
+  "computer-science-basics": "计算机基础",
+  "- pl": {
+    "title": "编程语言学习",
+    "type": "separator"
+  },
+  "programming-languages": "编程语言学习",
+  "- dev": {
+    "title": "开发",
+    "type": "separator"
+  },
+  "development": "开发",
+  "- other": {
+    "title": "其他",
+    "type": "separator"
+  },
+  "other": "其他"
+}
