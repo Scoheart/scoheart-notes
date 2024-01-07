@@ -201,3 +201,27 @@ nestjs          ioc di aop 装饰器模式
 js 装饰器
 
 
+
+
+
+# 三层架构
+- 控制层            路由层
+- 业务逻辑层         处理逻辑的
+- 持久层 数据访问层   Database
+
+# MVC
+- 模型 Model
+- 视图 View
+- 控制器 Controller
+
+# SpringMVC
+
+Springboot
+- Spring
+- SpringMVC
+Mybatis
+
+SSM
+- Spring
+- SpringMVC
+- Mybatis
