@@ -28,15 +28,15 @@ https://en.wikipedia.org/wiki/List_of_ECMAScript_engines
 
 ### Just-in-time compilation engines
 
-| JavaScript Engine   | Company   | Application       | Browser Engine |
-| ------------------- | --------- | ----------------- | -------------- |
-| V8                  | Google    | Chromium\Chrome   |                |
-| SpiderMonkey        | Mozilla   | Firefox           |                |
-| JavaScriptCore      | Apple     | Safari            | WebKit         |
-| Chakra(JScript)     | Microsoft | Internet Explorer |                |
-| Chakra              | Microsoft | Edge              |                |
-| Hermes              | Facebook  | React Native      |                |
-| Carakan             | Opera     | Opera             |                |
+| JavaScript Engine   |  Company  |    Application    | Browser Engine |
+| :-----------------: | :-------: | :---------------: | :------------: |
+|         V8          |  Google   |  Chromium\Chrome  |                |
+|    SpiderMonkey     |  Mozilla  |      Firefox      |                |
+|   JavaScriptCore    |   Apple   |      Safari       |     WebKit     |
+|   Chakra(JScript)   | Microsoft | Internet Explorer |                |
+|       Chakra        | Microsoft |       Edge        |                |
+|       Hermes        | Facebook  |   React Native    |                |
+|       Carakan       |   Opera   |       Opera       |                |
 
 ### Runtime interpreter engines
 
