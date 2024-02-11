@@ -184,3 +184,14 @@ C:\Users\{your-username}\AppData\Roaming\npm\node_modules
 - 错误重定向 2>
 - &> 输出和错误重定向
 - 合并重定向 1>&2
+
+# Secure Hash Algorithms
+
+- SHA1
+  - 160-bit
+- SHA2
+  - SHA-224
+  - SHA-384
+  - SHA-512/224
+  - SHA-512/256
+- SHA3
