@@ -55,17 +55,88 @@ GRANT USAGE ON *.* TO `root`@`%`
 GRANT ALL PRIVILEGES ON `android`.* TO `root`@`%`
 
 -- 代表 来自任何主机的root用户 有 所有数据库的所有表的 所有权限
-GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, RELOAD, SHUTDOWN, PROCESS, FILE, REFERENCES, INDEX, ALTER, SHOW DATABASES, SUPER, CREATE TEMPORARY TABLES, LOCK TABLES, EXECUTE, REPLICATION SLAVE, REPLICATION CLIENT, CREATE VIEW, SHOW VIEW, CREATE ROUTINE, ALTER ROUTINE, CREATE USER, EVENT, TRIGGER, CREATE TABLESPACE, CREATE ROLE, DROP ROLE ON *.* TO `root`@`%` 
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, RELOAD, SHUTDOWN, PROCESS, FILE, REFERENCES, INDEX, ALTER, SHOW DATABASES, SUPER, CREATE TEMPORARY TABLES, LOCK TABLES, EXECUTE, REPLICATION SLAVE, REPLICATION CLIENT, CREATE VIEW, SHOW VIEW, CREATE ROUTINE, ALTER ROUTINE, CREATE USER, EVENT, TRIGGER, CREATE TABLESPACE, CREATE ROLE, DROP ROLE ON *.* TO `root`@`%`
 
 GRANT APPLICATION_PASSWORD_ADMIN,AUDIT_ABORT_EXEMPT,AUDIT_ADMIN,AUTHENTICATION_POLICY_ADMIN,BACKUP_ADMIN,BINLOG_ADMIN,BINLOG_ENCRYPTION_ADMIN,CLONE_ADMIN,CONNECTION_ADMIN,ENCRYPTION_KEY_ADMIN,FIREWALL_EXEMPT,FLUSH_OPTIMIZER_COSTS,FLUSH_STATUS,FLUSH_TABLES,FLUSH_USER_RESOURCES,GROUP_REPLICATION_ADMIN,GROUP_REPLICATION_STREAM,INNODB_REDO_LOG_ARCHIVE,INNODB_REDO_LOG_ENABLE,PASSWORDLESS_USER_ADMIN,PERSIST_RO_VARIABLES_ADMIN,REPLICATION_APPLIER,REPLICATION_SLAVE_ADMIN,RESOURCE_GROUP_ADMIN,RESOURCE_GROUP_USER,ROLE_ADMIN,SENSITIVE_VARIABLES_OBSERVER,SERVICE_CONNECTION_ADMIN,SESSION_VARIABLES_ADMIN,SET_USER_ID,SHOW_ROUTINE,SYSTEM_USER,SYSTEM_VARIABLES_ADMIN,TABLE_ENCRYPTION_ADMIN,XA_RECOVER_ADMIN ON *.* TO `root`@`%`
 ```
 
 #### 授权
+
 ```sql
 grant 权限 on 数据库名.表名 to '用户名'@'主机名';
 ```
 
 #### 回收权限
+
 ```sql
 revoke 权限 on 数据库名.表名 fromb '用户名'@'主机名';
+```
+
+# DCL Data Control Language
+```bash
+show grants for 'lsf'@'%';
+
+```
+
+# DDL Data Definition Language
+
+```bash
+# 库
+## 查看 R
+show databases;
+
+## 创建 C
+create database db_name;
+
+## 删除 D
+drop database db_name;
+
+# 表
+## 查看 R
+show tables;
+
+## 查看字段
+desc student;
+
+## 创建 C
+create table student (
+    name varchar(50),
+    age int
+)
+
+## 更新 U
+alter table student modify age varchar(30);
+
+## 删除 D
+drop table table_name;
+
+```
+
+表里的数据
+
+# DML Data Manipulation Language
+```bash
+# 增
+insert into student (name, age)
+values
+    ("lsf", 18),
+    ("shuhao", 22);
+
+# 查
+select * from student;
+
+# 更新
+update student
+set age = 22
+where name = "lsf"
+
+# 删
+delete from student
+where name = "lsf"
+```
+# DQL Data Query Language
+
+```bash
+select user, host from user;
+
 ```
