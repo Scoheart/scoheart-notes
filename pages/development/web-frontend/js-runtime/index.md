@@ -50,7 +50,7 @@ ECMAScript 引擎是一个执行用 ECMAScript 语言标准版本(例如 JavaScr
 | :-----------------: | :------------------------------: |
 |       QuickJS       | Fabrice Bellard & Charlie Gordon |
 |         KJS         |               KDE                |
-|       Duktape       |                                  |
+|       Duktape       |           Sami Vaarala           |
 
 ## JavaScirpt Runtime
 
