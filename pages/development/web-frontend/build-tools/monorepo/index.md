@@ -2,7 +2,9 @@
 
 ## 什么是 monorepo
 
-monorepo 就是在单个 git 仓库中管理多个项目，或者多个库。与之相对的概念就是 muli-repo 或 polyrepo，即多个 git 仓库管理多个项目。
+monorepo 就是在单个代码仓库中管理多个项目，或者多个库。
+
+与之相对的概念就是 multi-repo 或 polyrepo，即多个代码仓库管理多个项目。
 
 ## 包管理器 Package Manager
 
