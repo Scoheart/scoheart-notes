@@ -2,22 +2,22 @@
 
 ## Browser Engine | Layout Engine | Rendering Engine
 
-https://en.wikipedia.org/wiki/Comparison_of_web_browsers
-https://en.wikipedia.org/wiki/Comparison_of_browser_engines
-https://en.wikipedia.org/wiki/Browser_engine
 
-|  Browser Engine   | Company   | Web Browser       |
-| ----------------- | --------- | ----------------- |
-| KHTML             | KDE       | Konqueror         |
-| Blink             | Google    | Chromium\Chrome   |
-| WebKit            | Apple     | Safari            |
-| Trident           | Microsoft | Internet Explorer |
-| EdgeHTML          | Microsoft | Edge              |
-| Gecko             | Mozilla   | Firefox           |
-| Presto            | Opera     | Opera             |
+
+|  Browser Engine   |        Web Browser        | Company or Developer |
+| :---------------: | :-----------------------: | :------------------: |
+|      WebKit       |          Safari           |        Apple         |
+|       Blink       | Chromium\Chrome <br> Edge |        Google        |
+|       Gecko       |          Firefox          |       Mozilla        |
+|      Trident      |     Internet Explorer     |      Microsoft       |
+|     EdgeHTML      |           Edge            |      Microsoft       |
+|       KHTML       |         Konqueror         |         KDE          |
+|      Presto       |           Opera           |        Opera         |
+|       Flow        |           Flow            |        Ekioh         |
+|       Servo       |                           |   Linux Foundation   |
+|      Shadow       |                           |                      |
 
 ```mermaid
 graph LR
    KHTML --> WebKit --> Blink
 ```
- 
