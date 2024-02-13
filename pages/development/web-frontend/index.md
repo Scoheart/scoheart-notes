@@ -1,0 +1,132 @@
+# 我的前端练级手册
+
+## 简介
+
+这是我准备在 2024 年，学习或者更文的方向。👻
+
+## 目录
+
+- HTML
+- CSS
+  - CSS preprocessor
+    - sass、scss
+    - less
+    - stylus
+  - CSS postprocessor
+    - postcss
+  - CSS modularization
+    - BEM
+    - CSS Modules
+    - CSS in JS
+  - Atomic CSS
+    - tailwind css
+    - unocss
+  - Component Libraries
+    - Radix UI
+    - Ant Design
+    - Shadcn UI
+- JavaScript
+  - ECMAScript 2015+
+  - [JavaScript Engine](./juejin.md)
+  - JavaScript Runtime
+  - JavaScript Flavors
+    - Flow
+    - TypeScript
+    - CoffeScript
+    - Elm
+  - JavaScript Modularization
+    - CommonJS
+    - AMD
+    - CMD
+    - UMD
+    - SystemJS
+    - ES Module
+- Build Toolchains
+  - Formatters & Linters
+    - Prettier
+    - ESlint
+    - TSLint
+    - Stylelint
+  - [Compiler](https://juejin.cn/post/7333421776460759049)
+    - Babel
+    - SWC
+    - tsc
+  - Task Runner
+    - Grunt
+    - Gulp
+    - npm script
+  - JavaScript Package Manager
+    - npm
+    - yarn
+    - pnpm
+    - bun
+  - Module bundler
+    - browserify
+    - webpack
+    - parcel
+    - rollup
+    - esbuild
+    - unbuild
+    - vite
+    - rspack
+    - bun
+  - [Monorepo](https://juejin.cn/post/7333421776460759049)
+    - npm
+    - yarn
+    - pnpm
+    - nx
+    - rush
+    - lerna
+    - turborepo
+- Front-End Frameworks
+  - Vue
+  - React
+  - Angular
+  - Preact
+  - Svelte
+  - Solid
+  - Qwik
+  - Stencil
+  - Lit
+- Routers
+  - React Router
+  - TanStack Router
+  - Vue Router
+- State Management
+  - redux
+  - zustand
+  - vuex
+  - pinia
+- Rendering/Meta Frameworks
+  - Next.js
+  - Nuxt
+  - Gatsby
+  - Remix
+  - Astro
+  - SvelteKit
+- Test Tools
+  - Unit Test
+    - Jest
+    - Mocha
+    - Vitest
+  - UI Test
+    - Storybook
+    - Chromatic
+  - E2E Test
+    - Cypress
+    - Playwright
+- Back-End Frameworks
+  - koa
+  - express
+  - fastify
+  - nestjs
+  - egg
+  - midway
+- mobile
+  - React Native
+  - Expo
+  - NativeScript
+- Desktop
+  - NW.js
+  - Electron
+  - Tauri
