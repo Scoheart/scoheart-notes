@@ -32,25 +32,25 @@ ECMAScript 引擎是一个执行用 ECMAScript 语言标准版本(例如 JavaScr
 
 下面的这些 ECMAScript 引擎实现了即时编译技术。JIT 编译器在运行时将 JavaScript 代码转换为本地机器代码，而不是每次都解释执行。通过在运行时动态地分析代码，找到热点（被频繁执行的部分），并将这些部分编译成机器代码，提高 JavaScript 程序的整体性能。
 
-| JavaScript Engine   | Company or Developer |    Application    | Browser Engine |
-| :-----------------: | :------------------: | :---------------: | :------------: |
-|         V8          |        Google        |  Chromium\Chrome  |                |
-|    SpiderMonkey     |       Mozilla        |      Firefox      |                |
-|   JavaScriptCore    |        Apple         |      Safari       |     WebKit     |
-|   Chakra(JScript)   |      Microsoft       | Internet Explorer |                |
-|       Chakra        |      Microsoft       |       Edge        |                |
-|       Hermes        |       Facebook       |   React Native    |                |
-|       Carakan       |        Opera         |       Opera       |                |
+| JavaScript Engine   | Company or Developer |
+| :-----------------: | :------------------: |
+|         V8          |        Google        |
+|    SpiderMonkey     |       Mozilla        |
+|   JavaScriptCore    |        Apple         |
+|   Chakra(JScript)   |      Microsoft       |
+|       Chakra        |      Microsoft       |
+|       Hermes        |       Facebook       |
+|       Carakan       |        Opera         |
 
 ### Runtime interpreter engines
 
 以下引擎使用运行时解释器，它们不会编译为本机机器代码，并且通常运行速度较慢。
 
-| JavaScript Engine   |       Company or Developer       | Application |
-| :-----------------: | :------------------------------: | :---------: |
-|       QuickJS       | Fabrice Bellard & Charlie Gordon |             |
-|         KJS         |               KDE                |  Konqueror  |
-|       Duktape       |                                  |             |
+| JavaScript Engine   |       Company or Developer       |
+| :-----------------: | :------------------------------: |
+|       QuickJS       | Fabrice Bellard & Charlie Gordon |
+|         KJS         |               KDE                |
+|       Duktape       |                                  |
 
 ## JavaScirpt Runtime
 
@@ -168,9 +168,37 @@ deno run index.js
 bun run index.js
 ```
 
+### Browsers
+
+浏览器中，最重要的就是浏览器引擎（Browser Engine）或者又被称为 Layout Engine 、Rendering Engine，它是浏览器的核心组件。浏览器引擎的主要工作是将网页上的 HTML 文档和其他资源转换为用户设备上的交互式可视化表示。
+
+#### Browser Engine | Layout Engine | Rendering Engine
+
+https://en.wikipedia.org/wiki/Comparison_of_web_browsers
+
+https://en.wikipedia.org/wiki/Comparison_of_browser_engines
+
+https://en.wikipedia.org/wiki/Browser_engine
+
+|  Browser Engine   |    Web Browser    | Company or Developer |
+| :---------------: | :---------------: | :------------------: |
+|      WebKit       |      Safari       |        Apple         |
+|       Blink       |  Chromium\Chrome  |        Google        |
+|       Gecko       |      Firefox      |       Mozilla        |
+|      Trident      | Internet Explorer |      Microsoft       |
+|     EdgeHTML      |       Edge        |      Microsoft       |
+|       KHTML       |     Konqueror     |         KDE          |
+|      Presto       |       Opera       |        Opera         |
+|       Flow        |       Flow        |        Ekioh         |
+|       Servo       |      Firefox      |   Linux Foundation   |
+|      Shadow       |                   |      CanadaHonk      |
+
 ## 参考文章
 
 - [What is NodeJS? The JavaScript Engine and Runtime Explained for Beginners](https://www.freecodecamp.org/news/what-is-node-js-explained)
 - [JavaScript_engine](https://en.wikipedia.org/wiki/JavaScript_engine)
 - [List_of_ECMAScript_engines](https://en.wikipedia.org/wiki/List_of_ECMAScript_engines)
 - [The Future of JavaScript Runtime: Revolutionizing Serverless with LLRT](https://javascript.plainenglish.io/the-future-of-javascript-runtime-revolutionizing-serverless-with-llrt-30f46e39f037)
+- [Browser_engine](https://en.wikipedia.org/wiki/Browser_engine)
+- [Comparison_of_web_browsers](https://en.wikipedia.org/wiki/Comparison_of_web_browsers)
+- [Comparison_of_browser_engines](https://en.wikipedia.org/wiki/Comparison_of_browser_engines)
