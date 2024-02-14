@@ -28,13 +28,13 @@
 - JavaScript
   - ECMAScript 2015+
   - [JavaScript Engine](https://juejin.cn/spost/7333421776461135881)
-  - JavaScript Runtime
+  - [JavaScript Runtime](https://juejin.cn/spost/7333421776461135881)
   - JavaScript Flavors
     - Flow
     - TypeScript
     - CoffeScript
     - Elm
-  - JavaScript Modularization
+  - [JavaScript Modularization](https://juejin.cn/post/7334503381199847475)
     - CommonJS
     - AMD
     - CMD
