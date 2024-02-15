@@ -159,17 +159,31 @@ var Test = /*#__PURE__*/ (function () {
 ```js
 // babel.config.js
 module.exports = {
-  "presets": [
-    "@babel/preset-env",
-    "@babel/preset-react",
-    "@babel/preset-typescript"
+  presets: [
+    '@babel/preset-env',
+    '@babel/preset-react',
+    '@babel/preset-typescript',
     // 添加其他预设
   ],
-  "plugins": [
-    "@babel/plugin-proposal-class-properties"
+  plugins: [
+    '@babel/plugin-proposal-class-properties',
     // 添加其他插件
-  ]
-}
+  ],
+};
 ```
 
 这样能够使配置更加清晰、易于维护，并且提高了可重用性。在大型项目中，使用配置文件可以更方便地组织和管理 Babel 的配置。
+
+### SWC 的使用
+
+下载所需要的 npm 包
+
+```shell
+npm install @swc/core @swc/cli
+```
+
+编译
+
+```shell
+./node_module/.bin/swc ./index.js
+```
