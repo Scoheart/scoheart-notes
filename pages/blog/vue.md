@@ -707,7 +707,7 @@ export default /*#__PURE__*/ _defineComponent({
 });
 ```
 
-### compileTemplate 函数
+#### compileTemplate 函数
 
 compileTemplate 函数将 template 编译为 render 函数。最终的编译结果为：
 
@@ -748,7 +748,7 @@ export function render(_ctx, _cache) {
 
 没关系，其实在@vue/compiler-sfc 这个包中，早就给我们提供了应对方案。
 
-### rewriteDefault 函数
+#### rewriteDefault 函数
 
 rewriteDefault 函数能够接收我们编译后的 script 内容，以及自定义一个默认导出的对象名称。他就是帮助来重新改写`export default` 的对象的。
 
@@ -779,7 +779,7 @@ const __sfc_main__ = _defineComponent({
 });
 ```
 
-### 组合 改写后的 script 和 render 函数
+#### 组合 改写后的 script 和 render 函数
 
 所以现在，我们只需要组合将 `export default` 改写后的 script 和 template 编译的 render 函数，再将它们默认导出即可。
 
