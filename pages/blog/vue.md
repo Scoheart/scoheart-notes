@@ -93,6 +93,8 @@ const customVueComponent = {
 };
 ```
 
+这里补充一个 Vue 的 API —— defineComponent，它是我们在定义 Vue 组件时提供类型推导的辅助函数。不过这里，我们是直接在 html 文件中进行开发，使用它的作用并不显著。
+
 那么我们现在可以构建出下面的项目：
 
 ```html
@@ -145,6 +147,39 @@ const customVueComponent = {
 ```
 
 意思就是我们在 Vue 组件中提供的 template 选项，但在 Vue 的这个版本中不支持运行时编译。要使用"vue.global.js"这个构建版本代替。
+
+因此我们这里需要改变 Vue 组件的定义。不能继续使用 template 属性，而是用 render 函数取代。
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.4.19/dist/vue.global.js"></script>
+    <script>
+      const { ref, createApp, h } = Vue;
+      const customVueComponent = {
+        setup() {
+          const count = ref(0);
+          return {
+            count: count,
+          };
+        },
+        render: (ctx) => {
+          return h('button', null, 'You click me ' + ctx.count + ' times');
+        },
+      };
+      const app = createApp(customVueComponent);
+      app.mount('#root');
+    </script>
+  </body>
+</html>
+```
 
 ## 通过 create-vite 脚手架创建一个 Vue 项目
 
@@ -235,10 +270,13 @@ Vue SFC 是一个框架指定的文件格式，因此必须交由 @vue/compiler-
       )
     );
   },
-  setup: setup(__props, { expose: __expose }) {
+  setup(__props, { expose: __expose }) {
     __expose();
     const __returned__ = { HelloWorld };
-    Object.defineProperty(__returned__, "__isScriptSetup", { enumerable: false, value: true });
+    Object.defineProperty(__returned__, '__isScriptSetup', {
+      enumerable: false,
+      value: true,
+    });
     return __returned__;
   },
   __name: 'App',
@@ -287,10 +325,9 @@ h1 {
 </style>
 ```
 
-继续编写一个 compiler.js 文件，用来编译 SFC 文件：
+继续编写一个 compiler.js 文件，用来编译 SFC 文件，内容如下。
 
 ```js
-// 首先引入 @vue/compiler-sfc 模块和一些 nodejs 内置模块
 const {
   parse,
   compileScript,
@@ -303,21 +340,22 @@ const path = require('path');
 
 const sfcFile = 'App.vue';
 const sfcPath = path.resolve(sfcFile);
+
 const id = Date.now().toString().substring(0, 8);
 
-// 编译后的对象的一些属性
+// 设置组件的信息，便于开发环境查看
 const __file = sfcPath;
 const __name = sfcFile.split('.').shift();
-const __scopedId = `data-v-${id}`;
+const __scopedId = `data-v-${id}`; /** 用于css scope，唯一即可 */
 const __hmrId = `${id}`;
 
 // 读取 SFC 文件内容
-const sfcContent = fs.readFileSync(sfcPath, {
-  encoding: 'utf8',
-});
+const sfcContent = fs.readFileSync(sfcPath, 'utf-8');
 
 // 解析 SFC 文件内容, 得到 SFC 的 descriptor
-const { descriptor } = parse(sfcContent);
+const { descriptor } = parse(sfcContent, {
+  filename: sfcFile,
+});
 
 // 编译 script
 const script = compileScript(descriptor, {
@@ -332,12 +370,16 @@ const template = compileTemplate({
 });
 
 // 编译 style
-const style = compileStyle({
-  source: descriptor.styles[0].content,
-  id: id,
-});
+let css = '';
+for (const style of descriptor.styles) {
+  const { code } = compileStyle({
+    source: style.content,
+    id: id,
+  });
+  css += code;
+}
 
-// 组合 template 和 script
+// 组合 render函数 和 改写后的script
 const codeList = [];
 codeList.push(template.code);
 codeList.push(rewriteDefault(script.content, '__sfc_main__'));
@@ -351,4 +393,504 @@ codeList.push(`export default __sfc_main__`);
 const code = codeList.join('\n');
 
 fs.writeFileSync('./target.js', code);
+fs.writeFileSync('./target.css', css);
 ```
+
+那让我们逐步来分析一下整个流程的原理。
+
+#### parse 函数
+
+parse 函数，用来解析 SFC 中的内容，返回一个对象。对象中有一个 descriptor 属性，用来存储 SFC 的描述信息。
+
+- descriptor.template 用来存储 SFC 中的 template 块
+- descriptor.script 用来存储 SFC 中的 script 块
+- descriptor.scriptSetup 用来存储 SFC 中的 scriptSetup 块
+- descriptor.styles 用来存储 SFC 中的 多个 style 块。
+
+```js
+{
+  descriptor: {
+    filename: "App.vue",
+    source: "<template>\n<div>\n  <h1>Hi, I'm Scoheart</h1>\n  <h1>{{ res }}</h1>\n</div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue';\nconst res = ref('Hello, Scoheart!');\n</script>\n\n<style scoped>\nh1 {\ncolor: blue;\n}\n</style>\n",
+    template: {
+      type: "template",
+      content: "\n<div>\n  <h1>Hi, I'm Scoheart</h1>\n  <h1>{{ res }}</h1>\n</div>\n",
+      loc: {
+        start: {
+          column: 11,
+          line: 1,
+          offset: 10,
+        },
+        end: {
+          column: 1,
+          line: 6,
+          offset: 73,
+        },
+        source: "\n<div>\n  <h1>Hi, I'm Scoheart</h1>\n  <h1>{{ res }}</h1>\n</div>\n",
+      },
+      attrs: {
+      },
+      ast: {
+        type: 0,
+        source: "<template>\n<div>\n  <h1>Hi, I'm Scoheart</h1>\n  <h1>{{ res }}</h1>\n</div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue';\nconst res = ref('Hello, Scoheart!');\n</script>\n\n<style scoped>\nh1 {\ncolor: blue;\n}\n</style>\n",
+        children: [
+          {
+            type: 1,
+            tag: "div",
+            ns: 0,
+            tagType: 0,
+            props: [
+            ],
+            children: [
+              {
+                type: 1,
+                tag: "h1",
+                ns: 0,
+                tagType: 0,
+                props: [
+                ],
+                children: [
+                  {
+                    type: 2,
+                    content: "Hi, I'm Scoheart",
+                    loc: {
+                      start: {
+                        column: 7,
+                        line: 3,
+                        offset: 23,
+                      },
+                      end: {
+                        column: 23,
+                        line: 3,
+                        offset: 39,
+                      },
+                      source: "Hi, I'm Scoheart",
+                    },
+                  },
+                ],
+                loc: {
+                  start: {
+                    column: 3,
+                    line: 3,
+                    offset: 19,
+                  },
+                  end: {
+                    column: 28,
+                    line: 3,
+                    offset: 44,
+                  },
+                  source: "<h1>Hi, I'm Scoheart</h1>",
+                },
+                codegenNode: undefined,
+              },
+              {
+                type: 1,
+                tag: "h1",
+                ns: 0,
+                tagType: 0,
+                props: [
+                ],
+                children: [
+                  {
+                    type: 5,
+                    content: {
+                      type: 4,
+                      loc: {
+                        start: {
+                          column: 10,
+                          line: 4,
+                          offset: 54,
+                        },
+                        end: {
+                          column: 13,
+                          line: 4,
+                          offset: 57,
+                        },
+                        source: "res",
+                      },
+                      content: "res",
+                      isStatic: false,
+                      constType: 0,
+                      ast: null,
+                    },
+                    loc: {
+                      start: {
+                        column: 7,
+                        line: 4,
+                        offset: 51,
+                      },
+                      end: {
+                        column: 16,
+                        line: 4,
+                        offset: 60,
+                      },
+                      source: "{{ res }}",
+                    },
+                  },
+                ],
+                loc: {
+                  start: {
+                    column: 3,
+                    line: 4,
+                    offset: 47,
+                  },
+                  end: {
+                    column: 21,
+                    line: 4,
+                    offset: 65,
+                  },
+                  source: "<h1>{{ res }}</h1>",
+                },
+                codegenNode: undefined,
+              },
+            ],
+            loc: {
+              start: {
+                column: 1,
+                line: 2,
+                offset: 11,
+              },
+              end: {
+                column: 7,
+                line: 5,
+                offset: 72,
+              },
+              source: "<div>\n  <h1>Hi, I'm Scoheart</h1>\n  <h1>{{ res }}</h1>\n</div>",
+            },
+            codegenNode: undefined,
+          },
+        ],
+        helpers: {
+        },
+        components: [
+        ],
+        directives: [
+        ],
+        hoists: [
+        ],
+        imports: [
+        ],
+        cached: 0,
+        temps: 0,
+        codegenNode: undefined,
+        loc: {
+          start: {
+            line: 1,
+            column: 1,
+            offset: 0,
+          },
+          end: {
+            line: 1,
+            column: 1,
+            offset: 0,
+          },
+          source: "",
+        },
+      },
+      map: {
+        version: 3,
+        sources: [
+          "App.vue",
+        ],
+        names: [
+        ],
+        mappings: ";AACA,CAAC,CAAC,CAAC,CAAC;EACF,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,EAAE,CAAC,CAAC,EAAE,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;EACxB,CAAC,CAAC,CAAC,CAAC,CAAC,EAAE,CAAC,CAAC,EAAE,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AACnB,CAAC,CAAC,CAAC,CAAC,CAAC",
+        file: "App.vue",
+        sourceRoot: "",
+        sourcesContent: [
+          "<template>\n<div>\n  <h1>Hi, I'm Scoheart</h1>\n  <h1>{{ res }}</h1>\n</div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue';\nconst res = ref('Hello, Scoheart!');\n</script>\n\n<style scoped>\nh1 {\ncolor: blue;\n}\n</style>\n",
+        ],
+      },
+    },
+    script: null,
+    scriptSetup: {
+      type: "script",
+      content: "\nimport { ref } from 'vue';\nconst res = ref('Hello, Scoheart!');\n",
+      loc: {
+        start: {
+          column: 25,
+          line: 8,
+          offset: 110,
+        },
+        end: {
+          column: 1,
+          line: 11,
+          offset: 175,
+        },
+        source: "\nimport { ref } from 'vue';\nconst res = ref('Hello, Scoheart!');\n",
+      },
+      attrs: {
+        setup: true,
+        lang: "ts",
+      },
+      setup: true,
+      lang: "ts",
+    },
+    styles: [
+      {
+        type: "style",
+        content: "\nh1 {\ncolor: blue;\n}\n",
+        loc: {
+          start: {
+            column: 15,
+            line: 13,
+            offset: 200,
+          },
+          end: {
+            column: 1,
+            line: 17,
+            offset: 221,
+          },
+          source: "\nh1 {\ncolor: blue;\n}\n",
+        },
+        attrs: {
+          scoped: true,
+        },
+        scoped: true,
+        map: {
+          version: 3,
+          sources: [
+            "App.vue",
+          ],
+          names: [
+          ],
+          mappings: ";AAaA,CAAC,EAAE;AACH,CAAC,CAAC,CAAC,CAAC,CAAC,EAAE,CAAC,CAAC,CAAC,CAAC;AACX",
+          file: "App.vue",
+          sourceRoot: "",
+          sourcesContent: [
+            "<template>\n<div>\n  <h1>Hi, I'm Scoheart</h1>\n  <h1>{{ res }}</h1>\n</div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue';\nconst res = ref('Hello, Scoheart!');\n</script>\n\n<style scoped>\nh1 {\ncolor: blue;\n}\n</style>\n",
+          ],
+        },
+      },
+    ],
+    customBlocks: [
+    ],
+    cssVars: [
+    ],
+    slotted: false,
+    shouldForceReload: (prevImports) => hmrShouldReload(prevImports, descriptor),
+  },
+  errors: [
+  ],
+}
+```
+
+这一步做的仅仅是将 SFC 中的内容解析为 descriptor 对象，并没有编译。可以发现，每个块中的 content 字段，就是 SFC 中的内容。
+
+并且因为我们使用的是 script setup 语法，所以 descriptor.script 的内容为 null，而 descriptor.scriptSetup 字段中包含了 script setup 语法中的内容。
+
+同时，我们只使用了一个 style 块，所以 descriptor.styles 数组中只有一个元素。
+
+#### compileScript 函数
+
+comileScript 函数将 scriptSetup 或者 script 块中的内容编译。这里我们因为我们没有 script 块，所以只编译了 scriptSetup 块。最终的编译结果为：
+
+```js
+// script.content
+import { defineComponent as _defineComponent } from 'vue';
+import { ref } from 'vue';
+
+export default /*#__PURE__*/ _defineComponent({
+  __name: 'App',
+  setup(__props, { expose: __expose }) {
+    __expose();
+
+    const res = ref('Hello, Scoheart!');
+
+    const __returned__ = { res };
+    Object.defineProperty(__returned__, '__isScriptSetup', {
+      enumerable: false,
+      value: true,
+    });
+    return __returned__;
+  },
+});
+```
+
+### compileTemplate 函数
+
+compileTemplate 函数将 template 编译为 render 函数。最终的编译结果为：
+
+```js
+// template.code
+import {
+  createElementVNode as _createElementVNode,
+  toDisplayString as _toDisplayString,
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
+} from 'vue';
+
+const _hoisted_1 = /*#__PURE__*/ _createElementVNode(
+  'h1',
+  null,
+  "Hi, I'm Scoheart",
+  -1 /* HOISTED */
+);
+
+export function render(_ctx, _cache) {
+  return (
+    _openBlock(),
+    _createElementBlock('div', null, [
+      _hoisted_1,
+      _createElementVNode('h1', null, _toDisplayString(_ctx.res), 1 /* TEXT */),
+    ])
+  );
+}
+```
+
+我们暂且不关注 style 块的处理，单单看 script 和 template 编译后的结果我们会发现，最终通过 `export default` 导出的是一个 Vue 组件。但是我们会发现导出的这个 Vue 组件并没有 render 函数。是因为 SFC 的 template 编译后的 render 函数，变成了独立的命名导出 `export function render`。
+
+那是不是意味着，我们现在需要将这个 render 函数，挂载到 export default 导出的对象上，那么如何实现呢？
+
+我们先回想一下 `export default` 的这个对象怎么来的？没错，通过 compileScript 函数编译而来。
+
+但是头疼的也来了，既然是由这个函数编译而来的，那么我们就不能自己手动给`export default`的对象增加一个字段啊。
+
+没关系，其实在@vue/compiler-sfc 这个包中，早就给我们提供了应对方案。
+
+### rewriteDefault 函数
+
+rewriteDefault 函数能够接收我们编译后的 script 内容，以及自定义一个默认导出的对象名称。他就是帮助来重新改写`export default` 的对象的。
+
+```js
+rewriteDefault(script.content, '__sfc_main__');
+```
+
+改写后的结果为：
+
+```js
+import { defineComponent as _defineComponent } from 'vue';
+import { ref } from 'vue';
+
+const __sfc_main__ = _defineComponent({
+  __name: 'App',
+  setup(__props, { expose: __expose }) {
+    __expose();
+
+    const res = ref('Hello, Scoheart!');
+
+    const __returned__ = { res };
+    Object.defineProperty(__returned__, '__isScriptSetup', {
+      enumerable: false,
+      value: true,
+    });
+    return __returned__;
+  },
+});
+```
+
+### 组合 改写后的 script 和 render 函数
+
+所以现在，我们只需要组合将 `export default` 改写后的 script 和 template 编译的 render 函数，再将它们默认导出即可。
+
+```js
+const codeList = [];
+codeList.push(template.code);
+codeList.push(rewriteDefault(script.content, '__sfc_main__'));
+codeList.push(`__sfc_main__.render=render`);
+codeList.push(`export default __sfc_main__`);
+```
+
+最终执行 node compiler.js 编译后的 target.js 文件的内容如下：
+
+```js
+import {
+  createElementVNode as _createElementVNode,
+  toDisplayString as _toDisplayString,
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
+} from 'vue';
+
+const _hoisted_1 = /*#__PURE__*/ _createElementVNode(
+  'h1',
+  null,
+  "Hi, I'm Scoheart",
+  -1 /* HOISTED */
+);
+
+export function render(_ctx, _cache) {
+  return (
+    _openBlock(),
+    _createElementBlock('div', null, [
+      _hoisted_1,
+      _createElementVNode('h1', null, _toDisplayString(_ctx.res), 1 /* TEXT */),
+    ])
+  );
+}
+
+import { defineComponent as _defineComponent } from 'vue';
+import { ref } from 'vue';
+
+const __sfc_main__ = _defineComponent({
+  __name: 'App',
+  setup(__props, { expose: __expose }) {
+    __expose();
+
+    const res = ref('Hello, Scoheart!');
+
+    const __returned__ = { res };
+    Object.defineProperty(__returned__, '__isScriptSetup', {
+      enumerable: false,
+      value: true,
+    });
+    return __returned__;
+  },
+});
+__sfc_main__.__name = 'App';
+__sfc_main__.__file = '/Users/heartsco/Scoheart/code/vite-project/src/App.vue';
+__sfc_main__.__scopeId = 'data-v-17080226';
+__sfc_main__.__hmrId = '17080226';
+__sfc_main__.render = render;
+export default __sfc_main__;
+```
+
+导出的对象如下，可以看出，和最初我们在 create-vite 脚手架中打印的 App 基本一致。
+
+```js
+{
+  render: function render(_ctx, _cache) {
+    return (
+      _openBlock(),
+      _createElementBlock('div', null, [
+        _hoisted_1,
+        _createElementVNode(
+          'h1',
+          null,
+          _toDisplayString(_ctx.res),
+          1 /* TEXT */
+        ),
+      ])
+    );
+  },
+  setup(__props, { expose: __expose }) {
+    __expose();
+
+    const res = ref('Hello, Scoheart!');
+
+    const __returned__ = { res };
+    Object.defineProperty(__returned__, '__isScriptSetup', {
+      enumerable: false,
+      value: true,
+    });
+    return __returned__;
+  },
+  __name: 'App',
+  __file: '/Users/heartsco/Scoheart/code/vite-project/src/App.vue',
+  __scopeId: 'data-v-17080226',
+  __hmrId: '17080226',
+};
+```
+
+### compileStyle 函数
+
+compileStyle 函数用来编译 style，在手动编译 SFC 的时候，我们在这的处理是将其输出到了一个单独的 css 文件 target.css，最终的结果为：
+
+```css
+h1 {
+  color: blue;
+}
+```
+
+这就是手动编译 SFC 的一个流程。
+
+在实际项目中，我们一般会使用集成了 SFC 编译器的构建工具，比如 Vite 或者 Vue CLI (基于 webpack)，@vue/compiler-sfc 就分别被用在 @vitejs/plugin-vue 和 vue-loader 上.
