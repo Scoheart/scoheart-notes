@@ -218,10 +218,51 @@ Vue SFC 是一个框架指定的文件格式，因此必须交由 @vue/compiler-
 
 ### 手动编译 SFC
 
+开始之前，我们可以先在 create-vite 脚手架中的 main.js 中通过`console.log(App)`打印一个日志，在控制台看看 从 App.vue 文件中导出的这个 App 单文件组件，最终是一个什么样子，可以看出来，这个 App 就是一个标准的 JavaScript 对象。
+
+```js
+// App
+{
+  render: function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
+    return (
+      _openBlock(),
+      _createElementBlock(
+        _Fragment,
+        null,
+        [_hoisted_1, _createVNode($setup['HelloWorld'], { msg: 'Vite + Vue' })],
+        64
+        /* STABLE_FRAGMENT */
+      )
+    );
+  },
+  setup: setup(__props, { expose: __expose }) {
+    __expose();
+    const __returned__ = { HelloWorld };
+    Object.defineProperty(__returned__, "__isScriptSetup", { enumerable: false, value: true });
+    return __returned__;
+  },
+  __name: 'App',
+  __hmrId: '7a7a37b1',
+  __scopeId: 'data-v-7a7a37b1',
+  __file: '/Users/heartsco/Scoheart/code/vite-project/src/App.vue',
+};
+```
+
+所以其实，我们手动编译一个 SFC 文件，其实就是将 SFC 文件中的 template、script 和 style 块编译为上面所看到的这个 JavaScript 对象。接下来，我们正式开始手动编写一个 SFC 文件。
+
 首先，初始化项目，并且需要安装上面说到的 @vue/compiler-sfc 依赖：
 
 ```shell
 npm init; npm install @vue/compiler-sfc
+```
+
+其次，我们将准备的目录结构如下：
+
+```
+├── App.vue
+├── compiler.js
+├── package-lock.json
+├── package.json
 ```
 
 然后，我们手动编写一个 SFC 文件：
@@ -234,14 +275,80 @@ npm init; npm install @vue/compiler-sfc
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 const a = 'Hello, Scoheart!';
+console.log(a)
 </script>
 
-<style>
+<style scoped>
 h1 {
   color: blue;
 }
 </style>
+```
 
+继续编写一个 compiler.js 文件，用来编译 SFC 文件：
+
+```js
+// 首先引入 @vue/compiler-sfc 模块和一些 nodejs 内置模块
+const {
+  parse,
+  compileScript,
+  compileTemplate,
+  compileStyle,
+  rewriteDefault,
+} = require('@vue/compiler-sfc');
+const fs = require('fs');
+const path = require('path');
+
+const sfcFile = 'App.vue';
+const sfcPath = path.resolve(sfcFile);
+const id = Date.now().toString().substring(0, 8);
+
+// 编译后的对象的一些属性
+const __file = sfcPath;
+const __name = sfcFile.split('.').shift();
+const __scopedId = `data-v-${id}`;
+const __hmrId = `${id}`;
+
+// 读取 SFC 文件内容
+const sfcContent = fs.readFileSync(sfcPath, {
+  encoding: 'utf8',
+});
+
+// 解析 SFC 文件内容, 得到 SFC 的 descriptor
+const { descriptor } = parse(sfcContent);
+
+// 编译 script
+const script = compileScript(descriptor, {
+  id: id,
+});
+
+// 编译 template
+const template = compileTemplate({
+  source: descriptor.template.content,
+  id: id,
+  filename: sfcPath,
+});
+
+// 编译 style
+const style = compileStyle({
+  source: descriptor.styles[0].content,
+  id: id,
+});
+
+// 组合 template 和 script
+const codeList = [];
+codeList.push(template.code);
+codeList.push(rewriteDefault(script.content, '__sfc_main__'));
+codeList.push(`__sfc_main__.__name='${__name}'`);
+codeList.push(`__sfc_main__.__file='${__file}'`);
+codeList.push(`__sfc_main__.__scopeId='${__scopedId}'`);
+codeList.push(`__sfc_main__.__hmrId='${__hmrId}'`);
+codeList.push(`__sfc_main__.render=render`);
+codeList.push(`export default __sfc_main__`);
+
+const code = codeList.join('\n');
+
+fs.writeFileSync('./target.js', code);
 ```
