@@ -10,6 +10,27 @@
 
 ## Common
 
+### position
+
+相关属性
+
+> type、layoutMode、layoutPositioning
+
+对于每一个 Node 的 position 我们首先需要知道他的 parent Node 是什么类型的 Node。
+
+- PageNode: relative
+- GroupNode: absolute
+- 如果为 FrameNode，则还需要看其 parent Node 的 layoutMode
+  - NONE：absolute
+  - 如果为 VERTICAL ｜ HORIZONTAL 这两者，还需要看其自身的 layoutPositioning
+    - AUTO：relative
+    - ABSOLUTE：absolute
+
+
+### color
+
+### background
+
 ### border
 
 CSS 的 border 包括三大部分
@@ -87,8 +108,6 @@ interface BlurEffect {
 declare type Effect = DropShadowEffect | InnerShadowEffect | BlurEffect;
 ```
 
-### color
-
 ```ts
 interface SolidPaint {
   readonly type: 'SOLID';
@@ -139,20 +158,3 @@ interface VideoPaint {
 declare type Paint = SolidPaint | GradientPaint | ImagePaint | VideoPaint;
 ```
 
-## Frame
-
-### position
-
-相关属性
-
-> type、layoutMode、layoutPositioning
-
-对于每一个 Node 的 position 我们首先需要知道他的 parent Node 是什么类型的 Node。
-
-- PageNode: relative
-- GroupNode: absolute
-- 如果为 FrameNode，则还需要看其 parent Node 的 layoutMode
-  - NONE：absolute
-  - 如果为 VERTICAL ｜ HORIZONTAL 这两者，还需要看其自身的 layoutPositioning
-    - AUTO：relative
-    - ABSOLUTE：absolute
