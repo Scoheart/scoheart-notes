@@ -18,6 +18,7 @@ tsc (Typescript Compiler)：tsc 是 Typescript 的官方编译器，可将 types
 - babel
 - swc
 - tsc
+- sucrase
 
 流行度低或已老旧
 
