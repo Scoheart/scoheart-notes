@@ -27,6 +27,16 @@
     - Shadcn UI
 - [JavaScript](./3-javascript/index.md)
   - [ECMAScript 2015+](./3-javascript/ecmascript/)
+    - ECMAScript 2015
+    - ECMAScript 2016
+    - ECMAScript 2017
+    - ECMAScript 2018
+    - ECMAScript 2019
+    - ECMAScript 2020
+    - ECMAScript 2021
+    - ECMAScript 2022
+    - ECMAScript 2023
+    - ECMAScript 2024
   - [JavaScript Engine](./3-javascript/javascript-engine/)
     - JavaScriptCore
     - V8
@@ -34,6 +44,11 @@
     - SpiderMonkey
     - QuickJS
   - JavaScript Runtime
+    - Browser
+    - NodeJS
+    - LLRT
+    - Bun
+    - Deno
   - JavaScript Flavors
     - Flow
     - TypeScript
@@ -54,8 +69,9 @@
     - Stylelint
   - [Compiler](./4-build-tools/compiler/index.md)
     - Babel
-    - SWC
+    - swc
     - tsc
+    - sucrase
   - Task Runner
     - Grunt
     - Gulp
@@ -102,6 +118,10 @@
   - zustand
   - vuex
   - pinia
+  - jotai
+  - recoil
+  - xstate
+  - mobx
 - Rendering/Meta Frameworks
   - Next.js
   - Nuxt
@@ -109,6 +129,7 @@
   - Remix
   - Astro
   - SvelteKit
+  - Universal
 - Test Tools
   - Unit Test
     - Jest
@@ -120,6 +141,7 @@
   - E2E Test
     - Cypress
     - Playwright
+    - nightwatch
 - Back-End Frameworks
   - koa
   - express
