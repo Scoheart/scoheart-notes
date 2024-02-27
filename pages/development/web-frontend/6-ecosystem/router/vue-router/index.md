@@ -12,5 +12,13 @@
 - hash
 - history
 
+## 前端路由三大件
+- router
+- route
+- 路由切换
+  - RouterLink
+- 路由展示
+  - RouterView
+
 ## 补充
 后端路由的本质是「」
