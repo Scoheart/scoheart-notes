@@ -164,3 +164,80 @@ proxies:
     cipher: chacha20-ietf-poly1305
     password: '12345678'
 ```
+
+
+
+# JavaScript中有哪些数据类型
+## 值类型
+- number
+- string
+- undefined
+- boolean
+- null
+- symbol
+- bigint
+
+## 引用类型
+- object
+  - array
+  - function
+
+# undefined、null的区别
+
+```js
+const a = function sayHi () {
+
+}
+
+const a =  () => {
+  
+}
+
+
+const obj = {
+  "0": 
+}
+
+
+
+
+
+```
+
+
+## 面向对象语言
+对象
+- 标识符（唯一）
+- 状态
+- 行为
+
+### Java
+- 地址
+- 属性
+- 方法
+
+### C++
+- 地址
+- 成员变量
+- 成员函数
+
+### JavaScript
+- 地址
+- 属性
+  - 属性
+  - 方法
+```js
+const a = {
+  name: "shuhao",
+  eat: function eat () {
+
+  }
+}
+
+```
+
+数据属性
+访问器属性
+
+
+![alt text](image.png)

@@ -9,8 +9,6 @@
 ## Configuration
 ```yaml
 https://www.spacetalent.com.cn/jituan_xxx.html?id=242&childDeptId=276&positionId=（中国航天人才网）
-
-
 ```
 
 v2rayNG_1.8.17.apk
