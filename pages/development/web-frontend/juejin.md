@@ -41,6 +41,11 @@
     - UMD
     - SystemJS
     - ES Module
+  - JavaScript Package Manager
+    - npm
+    - yarn
+    - pnpm
+    - bun
 - Build Toolchains
   - Formatters & Linters
     - Prettier
@@ -55,11 +60,6 @@
     - Grunt
     - Gulp
     - npm script
-  - JavaScript Package Manager
-    - npm
-    - yarn
-    - pnpm
-    - bun
   - Module bundler
     - browserify
     - webpack
