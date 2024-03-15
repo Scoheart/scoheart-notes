@@ -20,7 +20,7 @@ let x: mod.SomeType; // Ok
 
 ## Type-only
 
-1. typescript 默认忽略用在类型的导入导出，但是可以通过 type 显式的触发这个行为
+1. typescript 默认忽略用在类型的导入导出，人话就是它会在编译完成的阶段把 import type 这样的语句给他删除调, 但是可以通过 type 显式的触发这个行为
 2. 一个值类型也可以通过 type 导入，只需要把其通过 typeof 之后用在类型定义的地方就行
 3. type 不能同时声明 default 导入和 named 导入，可以分开写 或者 通过 default as xxx
 
