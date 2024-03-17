@@ -1,0 +1,23 @@
+- cookie 的作用，怎么发
+- cookie 和 localStorage 以及 sessionStorage 的区别
+- cookie 是怎么存的？
+- 然后就问了两个问题 cookie 和 session 的使用场景
+- 简单介绍 cookie、localstorage、sessionStorage 的区别
+- cookie 的作用与常见属性
+- Cookie、sessionStorage、localStorage 的区别?
+- cookie localstorage 区别
+- 为什么要用 localstorage，讲下 cookie、localstorage 和 sessionstorage
+- 用户能操作 localstorage 吗，怎么删除 localstorage
+- session cookie token 的区别
+- token 和 cookie
+- cookie 怎么携带的
+- cookie 跨域问题介绍一下
+- 无感刷新，refreshToken 怎么做到安全，用 cookie 解决，同源策略，token 如何保证安全
+- cookie 的 http only
+- cookie 的同源安全策略，localstorage 是否有同源安全策略
+- 假如你想要攻击一个网站，你会如何攻击，想要拿到什么（我说我想获得它的 cookie）
+- 如何避免获得 cookie（cookie 的 httponly）
+- 除 indexedDB 外的浏览器存储方案，local，ssesionStorage 和 cookie 三者区别，能否跨域
+- cookie、localStorage 和状态管理器区别
+- Cookie 是什么？（回答有待改进）cookie 的作用？cookie 有什么内容、信息？（有些紧张，忘记了，其实在问字段）
+- cookie 怎么验证用户的身份？（X）
