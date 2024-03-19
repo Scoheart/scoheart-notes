@@ -25,3 +25,14 @@ let x: mod.SomeType; // Ok
 3. type 不能同时声明 default 导入和 named 导入，可以分开写 或者 通过 default as xxx
 
 ## import Types
+
+
+
+
+## 
+- Scripts and modules in JavaScript
+  - Scripts
+  - Module
+    - ESM
+    - CJS
+- 
