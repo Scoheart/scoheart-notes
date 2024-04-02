@@ -1,0 +1,67 @@
+{
+  "id": 0,
+  "elementCounter": 1,
+  "type": "gudl-component",
+  "name": "Frame 1912056094",
+  "node": {
+    "id": 1,
+    "type": "gudl-element",
+    "content": {
+      "elementType": "container",
+      "sourceName": "Frame 1912056094",
+      "semanticType": "container",
+      "meta": {
+        "layout": {
+          "layoutMode": "Absolute",
+          "isInAutoLayout": false,
+          "rect": { "x": -4871, "y": 6839, "width": 263, "height": 184 },
+          "layoutSizingHorizontal": "FIXED",
+          "layoutSizingVertical": "FIXED"
+        },
+        "border": {
+          "cornerRadius": 0,
+          "cornerRadiusLeftTop": 0,
+          "cornerRadiusRightTop": 0,
+          "cornerRadiusRightBottom": 0,
+          "cornerRadiusLeftBottom": 0
+        },
+        "fill": {
+          "fills": [
+            {
+              "type": "SOLID",
+              "visibe": true,
+              "opacity": 1,
+              "color": { "r": 1, "g": 1, "b": 1 }
+            }
+          ],
+          "fillGeometry": [
+            {
+              "windingRule": "NONZERO",
+              "data": "M0 0 L263 0 L263 184 L0 184 L0 0 Z"
+            }
+          ]
+        },
+        "absoluteBoundingBox": {
+          "x": -4871,
+          "y": 6839,
+          "width": 263,
+          "height": 184
+        },
+        "absoluteRenderBounds": {
+          "x": -4871,
+          "y": 6839,
+          "width": 263,
+          "height": 184
+        },
+        "absoluteTransform": [
+          [1, 0, -4871],
+          [0, 1, 6839]
+        ],
+        "relativeTransform": [
+          [1, 0, -4871],
+          [0, 1, 6839]
+        ]
+      }
+    }
+  }
+}
