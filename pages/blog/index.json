@@ -1,0 +1,18 @@
+{
+  "id": 0,
+  "type": "gudl-component",
+  "name": "Frame 1912056016",
+  "node": {
+    "id": 1,
+    "type": "gudl-element",
+    "content": {
+      "elementType": "container",
+      "semanticType": "",
+      "style": {
+        "position": { "type": "gudl-static", "content": "absolute" },
+        "top": { "type": "gudl-static", "content": 92 },
+        "left": { "type": "gudl-static", "content": 203 }
+      }
+    }
+  }
+}
