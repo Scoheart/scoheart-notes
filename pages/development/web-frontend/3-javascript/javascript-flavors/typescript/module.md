@@ -35,4 +35,15 @@ let x: mod.SomeType; // Ok
   - Module
     - ESM
     - CJS
-- 
+
+
+## esModuleInterOp
+提供 CJS 和 ESM 的互操作性
+
+
+
+
+
+
+
+
