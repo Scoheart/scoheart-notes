@@ -1,5 +1,11 @@
 # Tanstack Router
 
+## 下载
+
+```bash
+pnpm install --save-dev @tanstack/router-vite-plugin @tanstack/router-devtools @tanstack/react-router
+```
+
 ## 创建路由树
 
 如果使用 vite 插件，则会在创建路由的时候自动生成路由树，不需要手动创建。
