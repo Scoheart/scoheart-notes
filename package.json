@@ -7,8 +7,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "proxy": "export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890; ",
-    "note": "git add -A && git commit -m \"feat: add new posts\" && git push"
+    "proxy": "export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890;",
+    "commit": "git add -A && git commit -m \"feat: add new posts\" && git push",
+    "note": "npm run proxy && npm run commit"
+
   },
   "repository": {
     "type": "git",
