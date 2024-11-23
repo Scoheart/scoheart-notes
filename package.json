@@ -7,7 +7,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "push": "git add -A; git commit -m \"feat: add new posts\";git push"
+    "push": "git add -A && git commit -m \"feat: add new posts\" && git push"
   },
   "repository": {
     "type": "git",
