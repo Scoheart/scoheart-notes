@@ -1,5 +1,10 @@
 # SSH
 
+## TL;DR
+
+- SSH（Secure Shell）是一种用于安全远程管理和访问计算机的网络协议 (基于 TCP 协议)
+- OpenSSH 是其开源实现，提供加密通信和多种工具以确保数据传输的安全性
+
 ## SSH
 
 SSH（Secure Shell）是一种网络协议，用于安全地远程管理和访问计算机。它通过加密和认证机制提供安全的通信通道，使用户能够在不安全的网络中进行安全的远程操作。SSH 常用于远程登录到服务器、执行命令和传输文件，确保数据在传输过程中的安全性和隐私性。
@@ -30,49 +35,70 @@ OpenSSH 基于客户端-服务器模型工作。客户端通过 ssh（ssh client
 - scp (Secure Copy): scp 是一个基于 SSH 的文件传输工具，用于在本地和远程主机之间安全地复制文件。
 - sftp (Secure File Transfer Protocol): sftp 是一个基于 SSH 的文件传输协议，提供了一个交互式的文件传输会话。
 
-``` mermaid
-sequenceDiagram
-    participant Client as SSH Client
-    participant Server as SSH Server
+## SSH 认证方式
 
-    Client->>Server: TCP Connect Request (port 22)
-    Server-->>Client: TCP Connect Acknowledge
+SSH 提供了多种认证方式，以确保连接的安全性和用户的身份验证。以下是常见的 SSH 认证方式：
 
-    Client->>Server: Protocol Version Exchange ("SSH-2.0-...")
-    Server-->>Client: Protocol Version Exchange ("SSH-2.0-...")
+### 1. 密码认证
 
-    Client->>Server: Algorithm Negotiation (encryption, MAC, compression)
-    Server-->>Client: Algorithm Agreement
+用户可以通过输入密码来验证身份，但是这种密码保存在客户端，如果密码被泄露，攻击者可以轻松获得密码。密码认证是 SSH 的最基本的认证方式，用户在登录时需要输入密码。但是，密码认证存在一些问题，如密码被记录、密码被 dictionary 攻击等。
 
-    Client->>Server: Key Exchange Initiation
-    Server-->>Client: Key Exchange Reply
-    loop Key Exchange Process
-        Client->>Server: DH/ECDH Public Key
-        Server-->>Client: DH/ECDH Public Key
-        Client->>Server: Shared Secret Confirmation
-        Server-->>Client: Shared Secret Confirmation
-    end
-
-    Server->>Client: Host Key Offer (server's public key)
-    Client-->>Server: Host Key Verification (accept/reject)
-
-    Client->>Server: User Authentication Request (password, publickey, etc.)
-    alt Password Authentication
-        Server-->>Client: Password Prompt
-        Client->>Server: Password Submission
-        Server-->>Client: Authentication Success/Failure
-    else Public Key Authentication
-        Client->>Server: Signature Challenge Response
-        Server-->>Client: Authentication Success/Failure
-    end
-
-    Client->>Server: Session Creation Request
-    Server-->>Client: Session Establishment Confirmation
-
-    Client->>Server: Command Execution or Service Request
-    Server-->>Client: Command Output or Service Response
-
-    Client->>Server: Close Connection Request
-    Server-->>Client: Connection Closed Acknowledge
-
+```bash
+ssh root@39.101.76.177
+# 输入密码
 ```
+
+### 2. 公钥认证
+
+公钥认证是 SSH 最安全的认证方式之一。用户生成一对密钥（公钥和私钥），将公钥放置在服务器上，而私钥保留在本地。连接时，服务器使用公钥验证用户的私钥，从而实现安全认证。这种方式比密码认证更安全，推荐使用。
+
+```bash
+# 生成密钥对
+# -t 指定密钥类型，默认是 rsa 类型
+# -C 指定注释，可以随便写
+# -f 指定密钥文件的存储路径，默认是 ~/.ssh/id_rsa
+ssh-keygen -t rsa -C "your_email@example.com" -f ~/.ssh/id_rsa
+
+# 执行上述命令后，会生成两个文件：
+# ~/.ssh/id_rsa 私钥
+# ~/.ssh/id_rsa.pub 公钥
+
+# 将公钥添加到服务器
+# -i 指定公钥文件路径
+ssh-copy-id -i ~/.ssh/id_rsa.pub root@39.101.76.177
+
+# 公钥认证登录服务器
+ssh -i ~/.ssh/id_rsa root@39.101.76.177
+```
+
+## 具体应用
+
+### 远程登录
+
+现有一台主机 A，主机 B
+
+主机 A 如果想要远程连接登录到主机 B：那么主机 A 需要使用已经安装好的 ssh 客户端去连接主机 B，而主机 B 则需要提前在主机 B 上装好 sshd 服务端。
+
+至此就可以在主机 A 上通过 ssh 协议远程登录到主机 B 了。
+
+---
+
+现在通过具体的案例：
+
+主机 A = 自己的电脑，主机 B = 阿里云服务器（地址为 39.101.76.177）
+
+首先在主机 A 上安装 ssh 客户端，一般 Linux 系统都自带了 ssh 客户端，可以通过 `ssh -V` 查看是否安装了 ssh 客户端。
+
+同时主机 B 上也需要安装 sshd 服务端，一般 Linux 系统都自带了 sshd 服务端，可以通过 `sshd -V` 查看是否安装了 sshd 服务端。
+
+如果满足上述条件，那么就可以在主机 A 上通过 ssh 协议远程登录到主机 B 了。
+
+接下来在主机 A 上打开终端执行以下命令：
+
+```bash
+ssh root@39.101.76.177
+```
+
+### 远程执行命令
+
+### 文件传输
