@@ -29,3 +29,50 @@ OpenSSH 基于客户端-服务器模型工作。客户端通过 ssh（ssh client
 
 - scp (Secure Copy): scp 是一个基于 SSH 的文件传输工具，用于在本地和远程主机之间安全地复制文件。
 - sftp (Secure File Transfer Protocol): sftp 是一个基于 SSH 的文件传输协议，提供了一个交互式的文件传输会话。
+
+``` mermaid
+sequenceDiagram
+    participant Client as SSH Client
+    participant Server as SSH Server
+
+    Client->>Server: TCP Connect Request (port 22)
+    Server-->>Client: TCP Connect Acknowledge
+
+    Client->>Server: Protocol Version Exchange ("SSH-2.0-...")
+    Server-->>Client: Protocol Version Exchange ("SSH-2.0-...")
+
+    Client->>Server: Algorithm Negotiation (encryption, MAC, compression)
+    Server-->>Client: Algorithm Agreement
+
+    Client->>Server: Key Exchange Initiation
+    Server-->>Client: Key Exchange Reply
+    loop Key Exchange Process
+        Client->>Server: DH/ECDH Public Key
+        Server-->>Client: DH/ECDH Public Key
+        Client->>Server: Shared Secret Confirmation
+        Server-->>Client: Shared Secret Confirmation
+    end
+
+    Server->>Client: Host Key Offer (server's public key)
+    Client-->>Server: Host Key Verification (accept/reject)
+
+    Client->>Server: User Authentication Request (password, publickey, etc.)
+    alt Password Authentication
+        Server-->>Client: Password Prompt
+        Client->>Server: Password Submission
+        Server-->>Client: Authentication Success/Failure
+    else Public Key Authentication
+        Client->>Server: Signature Challenge Response
+        Server-->>Client: Authentication Success/Failure
+    end
+
+    Client->>Server: Session Creation Request
+    Server-->>Client: Session Establishment Confirmation
+
+    Client->>Server: Command Execution or Service Request
+    Server-->>Client: Command Output or Service Response
+
+    Client->>Server: Close Connection Request
+    Server-->>Client: Connection Closed Acknowledge
+
+```
