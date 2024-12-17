@@ -131,3 +131,32 @@ C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.3443
 V8 代码使用了旧式的 std::atomic_load 函数来处理 shared_ptr
 C++20 引入了新的原子共享指针操作方式
 MSVC 的标准库通过 _CXX20_DEPRECATE_OLD_SHARED_PTR_ATOMIC_SUPPORT 宏标记了这个废弃特性
+
+### 6
+
+```shell
+# Set build arguments here. See `gn help buildargs`.
+is_component_build=true
+is_clang=false
+use_custom_libcxx=false
+use_custom_libcxx_for_host=false
+treat_warnings_as_errors=false
+
+```
+
+```shell
+T:\code\v8\v8\src/base/contextual.h(72): error C2492: 'v8::base::ContextualVariable<Derived,VarType>::top_': data with thread storage duration may not have dll interface
+T:\code\v8\v8\src/base/contextual.h(72): note: the template instantiation context (the oldest one first) is
+T:\code\v8\v8\src/base/contextual.h(27): note: while compiling class template 'v8::base::ContextualVariable'
+T:\code\v8\v8\src/base/contextual.h(121): error C2492: 'v8::base::ContextualVariableWithDefault<Derived,VarType,default_args...>::default_value_': data with thread storage duration may not have dll interface
+```
+
+这个错误信息表明在 v8::base::ContextualVariable 类中，使用了线程存储持续期（thread storage duration）的数据成员，并且该数据成员被声明为具有 DLL 接口。具体来说，错误发生在 top_ 成员变量上。
+
+错误详情
+T:\code\v8\v8\src\base\contextual.h(72): error C2492: 'v8::base::ContextualVariable<v8::internal::torque::CurrentSourceFile,v8::internal::torque::SourceId>::top_': data with thread storage duration may not have dll interface
+C2492: 数据具有线程存储持续期（thread storage duration），不能有 DLL 接口。
+thread storage duration: 使用 __declspec(thread) 或 thread_local 关键字声明的变量。
+dll interface: 被 __declspec(dllexport) 或 __declspec(dllimport) 修饰的变量。
+原因分析
+在 v8::base::ContextualVariable 类中，top_ 成员变量可能被声明为 thread_local，并且同时被标记为 __declspec(dllexport) 或 __declspec(dllimport)。这种组合是不允许的，因为线程本地存储（TLS）的数据不能通过 DLL 接口共享。
