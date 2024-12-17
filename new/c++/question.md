@@ -95,3 +95,39 @@ T:\code\v8\v8\demo>_node.exe
 ```
 
 ### 4
+https://groups.google.com/g/v8-users/c/NT1_kNtE-hE
+
+v8 在windows 上编译的时候设置配置为
+
+```gn
+is_component_build=true
+use_custom_libcxx=false
+```
+
+会报错
+
+原因是因为：v8 在windows 中启动 MSVC 编译的时候，MSVC 编译器不支持在 TLS + DLL
+
+### 5
+```shell
+../..\src/wasm/wasm-code-manager.h(765,28): error: 'atomic_load<v8::base::OwnedVector<const unsigned char>>' is deprecated: warning STL4029: std::atomic_*() overloads for shared_ptr are deprecated in C++20. The shared_ptr specialization of std::atomic provides superior functionality. You can define _SILENCE_CXX20_OLD_SHARED_PTR_ATOMIC_SUPPORT_DEPRECATION_WARNING or _SILENCE_ALL_CXX20_DEPRECATION_WARNINGS to suppress this warning. [-Werror,-Wdeprecated-declarations]
+  765 |     auto wire_bytes = std::atomic_load(&wire_bytes_);
+      |                            ^
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\memory(3914,1): note: 'atomic_load<v8::base::OwnedVector<const unsigned char>>' has been explicitly marked deprecated here
+ 3914 | _CXX20_DEPRECATE_OLD_SHARED_PTR_ATOMIC_SUPPORT _NODISCARD shared_ptr<_Ty> atomic_load(
+      | ^
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\yvals_core.h(1322,7): note: expanded from macro '_CXX20_DEPRECATE_OLD_SHARED_PTR_ATOMIC_SUPPORT'
+ 1322 |     [[deprecated("warning STL4029: "                                                                \
+      |       ^
+```
+从构建日志来看，这是一个与 C++20 标准库相关的废弃特性警告被当作错误处理的问题。让我详细分析：
+核心错误信息
+错误的具体原因
+在 C++20 中，std::atomic_load 对于 shared_ptr 的旧式原子支持已被废弃
+这个废弃警告来自 MSVC 的标准库实现（在 yvals_core.h 中定义）
+由于编译选项中的 /WX（将警告视为错误），这个废弃警告被升级为错误
+编译环境配置
+问题的技术细节
+V8 代码使用了旧式的 std::atomic_load 函数来处理 shared_ptr
+C++20 引入了新的原子共享指针操作方式
+MSVC 的标准库通过 _CXX20_DEPRECATE_OLD_SHARED_PTR_ATOMIC_SUPPORT 宏标记了这个废弃特性
