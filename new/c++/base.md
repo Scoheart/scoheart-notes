@@ -20,6 +20,15 @@
 
 ## cpp 标准库
 
-- GNU libstdc++ > gcc
+- GNU libstdc++ > gcc、clang
+  - GNU C++ Standard Library
 - LLVM libc++ > clang
+  - LLVM C++ Standard Library
+- MSVC STL > MSVC
+  - Microsoft Visual C++ Standard Library
+- Dinkumware C++ Standard Library > intel C++ Compiler
+- STLport > gcc、clang
+- EASTL > gcc、clang
+  - Electronic Arts Standard Template Library
+
 
