@@ -19,14 +19,14 @@ T:\code\v8\v8\include\v8config.h(13): fatal error C1189: #error:  "C++20 or late
 
 ### 问题
 
-include\v8config.h 中定义了 __cplusplus 宏，但是这个宏的值是 199711L，表示 C++98/03，而不是 C++20。
+include\v8config.h 中定义了 \_\_cplusplus 宏，但是这个宏的值是 199711L，表示 C++98/03，而不是 C++20。
 
 ### 解法
 
-/Zc:__cplusplus 是 Microsoft Visual C++ (MSVC) 编译器的一个选项，它控制编译器如何设置 __cplusplus 宏的值。具体来说：
+/Zc:**cplusplus 是 Microsoft Visual C++ (MSVC) 编译器的一个选项，它控制编译器如何设置 **cplusplus 宏的值。具体来说：
 
-默认行为：在较旧版本的 MSVC 中，即使你指定了 /std:c++17 或 /std:c++20，编译器也不会将 __cplusplus 宏设置为反映实际使用的 C++ 标准版本的值。相反，它通常保持一个较低的值（例如 199711L），这表示 C++98/03。
-启用 /Zc:__cplusplus：当你使用 /Zc:__cplusplus 选项时，编译器会正确地根据你指定的标准来设置 __cplusplus 宏的值。对于 C++17，它会被设置为 201703L；对于 C++20，它会被设置为 202002L 等等。
+默认行为：在较旧版本的 MSVC 中，即使你指定了 /std:c++17 或 /std:c++20，编译器也不会将 **cplusplus 宏设置为反映实际使用的 C++ 标准版本的值。相反，它通常保持一个较低的值（例如 199711L），这表示 C++98/03。
+启用 /Zc:**cplusplus：当你使用 /Zc:**cplusplus 选项时，编译器会正确地根据你指定的标准来设置 **cplusplus 宏的值。对于 C++17，它会被设置为 201703L；对于 C++20，它会被设置为 202002L 等等。
 
 ## 2
 
@@ -67,7 +67,6 @@ _node.exe : fatal error LNK1120: 16 unresolved externals
 
 ### 问题
 
-
 ## 3
 
 ```shell
@@ -95,9 +94,10 @@ T:\code\v8\v8\demo>_node.exe
 ```
 
 ### 4
+
 https://groups.google.com/g/v8-users/c/NT1_kNtE-hE
 
-v8 在windows 上编译的时候设置配置为
+v8 在 windows 上编译的时候设置配置为
 
 ```gn
 is_component_build=true
@@ -106,9 +106,10 @@ use_custom_libcxx=false
 
 会报错
 
-原因是因为：v8 在windows 中启动 MSVC 编译的时候，MSVC 编译器不支持在 TLS + DLL
+原因是因为：v8 在 windows 中启动 MSVC 编译的时候，MSVC 编译器不支持在 TLS + DLL
 
 ### 5
+
 ```shell
 ../..\src/wasm/wasm-code-manager.h(765,28): error: 'atomic_load<v8::base::OwnedVector<const unsigned char>>' is deprecated: warning STL4029: std::atomic_*() overloads for shared_ptr are deprecated in C++20. The shared_ptr specialization of std::atomic provides superior functionality. You can define _SILENCE_CXX20_OLD_SHARED_PTR_ATOMIC_SUPPORT_DEPRECATION_WARNING or _SILENCE_ALL_CXX20_DEPRECATION_WARNINGS to suppress this warning. [-Werror,-Wdeprecated-declarations]
   765 |     auto wire_bytes = std::atomic_load(&wire_bytes_);
@@ -120,6 +121,7 @@ C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.3443
  1322 |     [[deprecated("warning STL4029: "                                                                \
       |       ^
 ```
+
 从构建日志来看，这是一个与 C++20 标准库相关的废弃特性警告被当作错误处理的问题。让我详细分析：
 核心错误信息
 错误的具体原因
@@ -130,7 +132,7 @@ C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.3443
 问题的技术细节
 V8 代码使用了旧式的 std::atomic_load 函数来处理 shared_ptr
 C++20 引入了新的原子共享指针操作方式
-MSVC 的标准库通过 _CXX20_DEPRECATE_OLD_SHARED_PTR_ATOMIC_SUPPORT 宏标记了这个废弃特性
+MSVC 的标准库通过 \_CXX20_DEPRECATE_OLD_SHARED_PTR_ATOMIC_SUPPORT 宏标记了这个废弃特性
 
 ### 6
 
@@ -151,12 +153,115 @@ T:\code\v8\v8\src/base/contextual.h(27): note: while compiling class template 'v
 T:\code\v8\v8\src/base/contextual.h(121): error C2492: 'v8::base::ContextualVariableWithDefault<Derived,VarType,default_args...>::default_value_': data with thread storage duration may not have dll interface
 ```
 
-这个错误信息表明在 v8::base::ContextualVariable 类中，使用了线程存储持续期（thread storage duration）的数据成员，并且该数据成员被声明为具有 DLL 接口。具体来说，错误发生在 top_ 成员变量上。
+这个错误信息表明在 v8::base::ContextualVariable 类中，使用了线程存储持续期（thread storage duration）的数据成员，并且该数据成员被声明为具有 DLL 接口。具体来说，错误发生在 top\_ 成员变量上。
 
 错误详情
-T:\code\v8\v8\src\base\contextual.h(72): error C2492: 'v8::base::ContextualVariable<v8::internal::torque::CurrentSourceFile,v8::internal::torque::SourceId>::top_': data with thread storage duration may not have dll interface
+T:\code\v8\v8\src\base\contextual.h(72): error C2492: 'v8::base::ContextualVariable<v8::internal::torque::CurrentSourceFile,v8::internal::torque::SourceId>::top*': data with thread storage duration may not have dll interface
 C2492: 数据具有线程存储持续期（thread storage duration），不能有 DLL 接口。
-thread storage duration: 使用 __declspec(thread) 或 thread_local 关键字声明的变量。
-dll interface: 被 __declspec(dllexport) 或 __declspec(dllimport) 修饰的变量。
+thread storage duration: 使用 **declspec(thread) 或 thread_local 关键字声明的变量。
+dll interface: 被 **declspec(dllexport) 或 \_\_declspec(dllimport) 修饰的变量。
 原因分析
-在 v8::base::ContextualVariable 类中，top_ 成员变量可能被声明为 thread_local，并且同时被标记为 __declspec(dllexport) 或 __declspec(dllimport)。这种组合是不允许的，因为线程本地存储（TLS）的数据不能通过 DLL 接口共享。
+在 v8::base::ContextualVariable 类中，top* 成员变量可能被声明为 thread_local，并且同时被标记为 **declspec(dllexport) 或 **declspec(dllimport)。这种组合是不允许的，因为线程本地存储（TLS）的数据不能通过 DLL 接口共享。
+
+### 7
+
+```shell
+sudo find / -name "libclang_rt.osx.a" 2>/dev/null
+Password:
+Sorry, try again.
+Password:
+/Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/lib/darwin/libclang_rt.osx.a
+/System/Volumes/Data/Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/lib/darwin/libclang_rt.osx.a
+/System/Volumes/Data/Users/scoheart/Development/js-engine/v8/v8/third_party/llvm-build/Release+Asserts/lib/clang/20/lib/darwin/libclang_rt.osx.a
+/System/Volumes/Data/Users/scoheart/Code/lib/v8/v8/third_party/llvm-build/Release+Asserts/lib/clang/20/lib/darwin/libclang_rt.osx.a
+/System/Volumes/Data/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/15.0.0/lib/darwin/libclang_rt.osx.a
+/Users/scoheart/Development/js-engine/v8/v8/third_party/llvm-build/Release+Asserts/lib/clang/20/lib/darwin/libclang_rt.osx.a
+/Users/scoheart/Code/lib/v8/v8/third_party/llvm-build/Release+Asserts/lib/clang/20/lib/darwin/libclang_rt.osx.a
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/15.0.0/lib/darwin/libclang_rt.osx.a
+```
+
+### 8
+
+```
+CLANG_CONFIG_FILE_SYSTEM_DIR: /opt/homebrew/etc/clang
+CLANG_CONFIG_FILE_USER_DIR:   ~/.config/clang
+
+LLD is now provided in a separate formula:
+  brew install lld
+
+We plan to build LLVM 20 with `LLVM_ENABLE_EH=OFF`. Please see:
+  https://github.com/orgs/Homebrew/discussions/5654
+
+Using `clang`, `clang++`, etc., requires a CLT installation at `/Library/Developer/CommandLineTools`.
+If you don't want to install the CLT, you can write appropriate configuration files pointing to your
+SDK at ~/.config/clang.
+
+To use the bundled libunwind please use the following LDFLAGS:
+  LDFLAGS="-L/opt/homebrew/opt/llvm/lib/unwind -lunwind"
+
+To use the bundled libc++ please use the following LDFLAGS:
+  LDFLAGS="-L/opt/homebrew/opt/llvm/lib/c++ -L/opt/homebrew/opt/llvm/lib/unwind -lunwind"
+
+NOTE: You probably want to use the libunwind and libc++ provided by macOS unless you know what you're doing.
+
+llvm is keg-only, which means it was not symlinked into /opt/homebrew,
+because macOS already provides this software and installing another version in
+parallel can cause all kinds of trouble.
+
+If you need to have llvm first in your PATH, run:
+  echo 'export PATH="/opt/homebrew/opt/llvm/bin:$PATH"' >> ~/.zshrc
+
+For compilers to find llvm you may need to set:
+  export LDFLAGS="-L/opt/homebrew/opt/llvm/lib"
+  export CPPFLAGS="-I/opt/homebrew/opt/llvm/include"
+==> Summary
+🍺  /opt/homebrew/Cellar/llvm/19.1.5: 8,107 files, 1.9GB
+==> Running `brew cleanup llvm`...
+Disable this behaviour by setting HOMEBREW_NO_INSTALL_CLEANUP.
+Hide these hints with HOMEBREW_NO_ENV_HINTS (see `man brew`).
+==> Caveats
+==> llvm
+CLANG_CONFIG_FILE_SYSTEM_DIR: /opt/homebrew/etc/clang
+CLANG_CONFIG_FILE_USER_DIR:   ~/.config/clang
+
+LLD is now provided in a separate formula:
+  brew install lld
+
+We plan to build LLVM 20 with `LLVM_ENABLE_EH=OFF`. Please see:
+  https://github.com/orgs/Homebrew/discussions/5654
+
+Using `clang`, `clang++`, etc., requires a CLT installation at `/Library/Developer/CommandLineTools`.
+If you don't want to install the CLT, you can write appropriate configuration files pointing to your
+SDK at ~/.config/clang.
+
+To use the bundled libunwind please use the following LDFLAGS:
+  LDFLAGS="-L/opt/homebrew/opt/llvm/lib/unwind -lunwind"
+
+To use the bundled libc++ please use the following LDFLAGS:
+  LDFLAGS="-L/opt/homebrew/opt/llvm/lib/c++ -L/opt/homebrew/opt/llvm/lib/unwind -lunwind"
+
+NOTE: You probably want to use the libunwind and libc++ provided by macOS unless you know what you're doing.
+
+llvm is keg-only, which means it was not symlinked into /opt/homebrew,
+because macOS already provides this software and installing another version in
+parallel can cause all kinds of trouble.
+
+If you need to have llvm first in your PATH, run:
+  echo 'export PATH="/opt/homebrew/opt/llvm/bin:$PATH"' >> ~/.zshrc
+
+For compilers to find llvm you may need to set:
+  export LDFLAGS="-L/opt/homebrew/opt/llvm/lib"
+  export CPPFLAGS="-I/opt/homebrew/opt/llvm/include"
+
+```
+### 9
+```
+1. 错误分析
+主要错误点：
+1. 链接器选项错误：-fuse-ld=lld 表示尝试使用 LLVM 的 lld 链接器
+在 macOS 上，这个选项无效，因为 macOS 使用自己的链接器 (ld64)
+错误命令行：
+Bash
+
+
+```
