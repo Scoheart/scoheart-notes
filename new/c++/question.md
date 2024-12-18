@@ -265,3 +265,64 @@ Bash
 
 
 ```
+
+
+###  10
+
+```shell
+is_debug = false
+is_component_build = true
+is_clang = true
+use_custom_libcxx = true
+
+v8_enable_pointer_compression = false
+v8_enable_webassembly = false
+v8_optimized_debug = false
+v8_enable_i18n_support = false
+```
+
+
+windows 查看导出函数
+
+```shell
+dumpbin /exports T:\code\v8\v8\test-out\demo2\v8_libplatform.dll | findstr NewDefaultPlatform
+```
+
+
+### 11
+
+- v8 编译成功
+- 编译 demo.cc 失败
+  - 链接错误
+
+
+```shell
+is_debug = false
+is_component_build = true
+is_clang = true
+use_custom_libcxx = true
+
+v8_enable_pointer_compression = false
+v8_enable_webassembly = false
+v8_optimized_debug = false
+v8_enable_i18n_support = false
+
+```
+
+```shell
+T:\code\v8\v8>cl /IT:\code\v8\v8 /IT:\code\v8\v8\include samples\demo.cc /Fe:samples\_node.exe /EHsc /std:c++20 /Zc:__cplusplus /DV8_COMPRESS_POINTERS /DV8_ENABLE_SANDBOX /link /LIBPATH:"T:\code\v8\v8\test-out\demo2" v8.dll.lib v8_libplatform.dll.lib
+Microsoft (R) C/C++ Optimizing Compiler Version 19.42.34433 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+demo.cc
+Microsoft (R) Incremental Linker Version 14.42.34433.0
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+/out:samples\_node.exe
+/LIBPATH:T:\code\v8\v8\test-out\demo2
+v8.dll.lib
+v8_libplatform.dll.lib
+demo.obj
+demo.obj : error LNK2019: unresolved external symbol "class std::unique_ptr<class v8::Platform,struct std::default_delete<class v8::Platform> > __cdecl v8::platform::NewDefaultPlatform(int,enum v8::platform::IdleTaskSupport,enum v8::platform::InProcessStackDumping,class std::unique_ptr<class v8::TracingController,struct std::default_delete<class v8::TracingController> >,enum v8::platform::PriorityMode)" (?NewDefaultPlatform@platform@v8@@YA?AV?$unique_ptr@VPlatform@v8@@U?$default_delete@VPlatform@v8@@@std@@@std@@HW4IdleTaskSupport@12@W4InProcessStackDumping@12@V?$unique_ptr@VTracingController@v8@@U?$default_delete@VTracingController@v8@@@std@@@4@W4PriorityMode@12@@Z) referenced in function main
+samples\_node.exe : fatal error LNK1120: 1 unresolved externals
+```
