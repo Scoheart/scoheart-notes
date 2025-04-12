@@ -86,5 +86,58 @@ src/main/java/com/example/project/
 ```
 
 ```bash
-
+src/
+└── main/
+    ├── java/
+    │   └── com/
+    │       └── yourcompany/
+    │           └── yourproject/
+    │               ├── common/                  # 通用封装（响应体、常量、枚举、异常定义等）
+    │               │   ├── api/                 # 统一 API 响应封装类
+    │               │   ├── constant/            # 常量定义
+    │               │   ├── enums/               # 枚举定义
+    │               │   └── exception/           # 自定义异常类
+    │               │
+    │               ├── config/                  # 项目配置类
+    │               │   ├── SecurityConfig.java  # Spring Security 配置
+    │               │   ├── SwaggerConfig.java   # SpringDoc 配置
+    │               │   └── CorsConfig.java      # 跨域配置
+    │               │
+    │               ├── controller/              # 控制层
+    │               │   └── AuthController.java
+    │               │   └── UserController.java
+    │               │
+    │               ├── dto/                     # 数据传输对象 DTO
+    │               │   ├── LoginRequest.java
+    │               │   ├── LoginResponse.java
+    │               │   └── UserDTO.java
+    │               │
+    │               ├── entity/                  # 实体类（数据库映射）
+    │               │   └── User.java
+    │               │
+    │               ├── mapper/                  # MyBatis-Plus Mapper 接口
+    │               │   └── UserMapper.java
+    │               │
+    │               ├── service/                 # 服务接口和实现
+    │               │   ├── UserService.java
+    │               │   └── impl/
+    │               │       └── UserServiceImpl.java
+    │               │
+    │               ├── security/                # JWT & Spring Security 相关逻辑
+    │               │   ├── JwtAuthenticationFilter.java
+    │               │   ├── JwtUtil.java
+    │               │   ├── CustomUserDetailsService.java
+    │               │   └── SecurityEntryPoint.java  # 认证失败处理
+    │               │
+    │               ├── handler/                 # 全局异常和统一响应处理
+    │               │   ├── GlobalExceptionHandler.java
+    │               │   └── GlobalResponseHandler.java
+    │               │
+    │               ├── YourProjectApplication.java  # 启动类
+    │
+    └── resources/
+        ├── application.yml
+        ├── mapper/                   # 存放 XML（如果使用 XML 方式）
+        │   └── UserMapper.xml
+        └── static/                   # 静态资源（如上传图片）
 ```
