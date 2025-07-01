@@ -57,6 +57,14 @@ $$
 - 响应头中的 Date 字段
 - 响应头中的 Age 字段
 
+### Expires vs. max-age
+
+**Expires** 和 **Cache-Control: max-age** 都用来指明缓存的新鲜度寿命。
+
+**Expires** 响应头通过指定一个确切的时间点来定义缓存的新鲜度寿命。然而，由于其时间格式解析困难、实践中发现了诸多实现缺陷，且人为修改系统时钟可能导致缓存紊乱，因此，在 HTTP/1.1 的 **Cache-Control** 头部中采用了 **max-age** ——通过设定缓存时长（即一个相对的时间间隔）来解决上述问题。
+
+当响应中同时存在 **Expires** 头和 **Cache-Control: max-age** 时，标准明确规定应优先采用 **max-age** 的值。并且鉴于 HTTP/1.1 已被广泛采用，如今也确实没有必要再特意设置 **Expires** 响应头。
+
 ## 示例
 
 ### 文本示例
@@ -235,18 +243,20 @@ $$
 
 ![第三次请求](https://raw.githubusercontent.com/Scoheart/scoheart-notes/main/assets/408/network/http/http-caching/3rd.png)       
 
-## 重新验证 —— 过期不代表完全失效
+## 验证机制 —— 过期不代表完全失效
 
 当缓存的响应处于过期状态时，不代表该响应完全失效。
 
 当一个缓存的响应变为 **过期**（stale）之后，缓存系统并不会立刻丢弃它，而是可以尝试通过 **验证**（Validation）机制来“刷新”这份响应，使其重新变为可用的**新鲜**（fresh）状态。
 
+验证机制有两种 **验证器**（validator）：
+
+- **Last-Modified**
+- **ETag**
+
 > Validation is done by using a conditional request that includes an If-Modified-Since or If-None-Match request header.
 
-验证机制有以下方式：
-
-- Last-Modified/If-Modified-Since 验证，依据内容的最后修改时间来验证
-- ETag/If-None-Match 验证，依据内容的哈希值来验证
+要实现验证机制，需要客户端构造一个**条件请求**（conditional request），其中包含 **If-Modified-Since** 或 **If-None-Match** 请求头字段。
 
 ### Last-Modified 验证
 
@@ -293,7 +303,7 @@ $$
 
 于是，因为缓存的响应的 **新鲜度寿命**（freshness_lifetime）等于 **当前年龄**（current_age），所以缓存的响应处于 **过期**（stale）状态，不可以被复用，需要重新向服务器发起请求。
 
-但此时，由于缓存的响应在返回的时候，提供了 **Last-Modified** 字段，所以客户端会向原始服务器发送一个**条件请求**（conditional request），请求头中包含一个 **If-Modified-Since** 字段，值为缓存响应的 **Last-Modified** 字段。向服务器查询自指定时间以来（**Last-Modified**）是否有任何更改。
+但此时，由于缓存的响应在返回的时候，提供了 **Last-Modified** 验证器，所以客户端会构造一个**条件请求**（conditional request）发往原始服务器，同时请求头中包含一个 **If-Modified-Since** 字段，值为缓存的响应的 **Last-Modified** 验证器的值。向服务器查询自指定时间（**Last-Modified**）以来是否有任何更改。
 
 如果内容自指定时间以来未更改，则服务器会返回一个 **304 状态码** 的响应。并且这个响应仅仅包含响应头，不包含响应体，它用来通知缓存系统，缓存的响应仍然有效，可以复用。于此同时，缓存系统会刷新缓存的响应的状态，将其重新变为可复用的**新鲜**（fresh）状态。
 
@@ -301,7 +311,7 @@ $$
 
 ### ETag 验证
 
-ETag 和 Last-Modified 的流程大致相同，只是验证方式的切换。这里不再赘述。
+ETag 和 Last-Modified 的流程大致相同，只是验证器的切换。这里不再赘述。
 
 ### 强制验证
 
@@ -326,8 +336,20 @@ Cache-Control: no-cache
 
 由于 HTTP 缓存机制，该响应被缓存至本地来提供复用。但是因为 **Cache-Control** 字段的值为 **no-cache** ，该响应不会被直接复用，而是需要向服务器发起请求验证。
 
-也就是说我们后续的请求，都会向服务器发起请求验证。依据 **Last-Modified/If-Modified-Since** 或 **ETag/If-None-Match** 来验证缓存的响应是否仍然有效。验证的流程和上面介绍的一致。
+也就是说我们后续的请求，都会向服务器发起请求验证。依据 **Last-Modified** 或 **ETag** 验证器来验证缓存的响应是否仍然有效。验证的流程和上面介绍的一致。
 
 如果请求的资源已更新，客户端将收到 **200 OK** 响应，并且使用新的响应；如果请求的资源未更新，客户端将收到 **304 Not Modified** 响应，同时复用缓存的响应。
 
 ***简而言之，普通的验证被用来刷新缓存的响应的新鲜状态，而强制验证则是迫使客户端在复用缓存的响应前，都先向服务器发起条件请求验证缓存响应是否仍然有效。***
+
+## 不缓存
+
+当服务器将响应头中的 **Cache-Control** 字段的值设置为 **no-store** 时，表示服务器告知任何缓存，不得存储该响应，即不可以缓存该响应。
+
+## 再谈验证机制
+
+上述的验证机制，我们只是介绍了由服务器主导的重新验证。即通过服务器设置 **Cache-Control** 字段的值为 **no-cache** ，并且添加**验证器**（validator）—— **Last-Modified/ETag**，来迫使客户端在复用缓存的响应前，都先向服务器发起条件请求验证缓存响应是否仍然有效。
+
+实际上，客户端也可以主动发起重新验证。也就是说，验证机制不仅适用于响应，同样也适用于请求。
+
+浏览器端的重新加载（reload）与强制重新加载（force reload）操作，即是客户端发起验证的典型场景。
