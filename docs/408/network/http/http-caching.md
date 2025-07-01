@@ -212,7 +212,7 @@ Keep-Alive: timeout=5
 Content-Length: 20
 ```
 
-![Nodejs 响应头](https://github.com/Scoheart/scoheart-notes/blob/main/scoheart/blog/1st.png?raw=true)
+![第一次请求](https://raw.githubusercontent.com/Scoheart/scoheart-notes/main/assets/408/network/http/http-caching/1st.png)
 
 由于触发 HTTP 缓存机制，因此该响应被缓存至本地来提供复用。
 
@@ -227,23 +227,107 @@ $$
 
 我们可以从 **Network** 面板中看到，第二次请求的 **Transferred** 为 cached 状态，即复用了缓存的响应。
 
-![Nodejs 响应头](https://github.com/Scoheart/scoheart-notes/blob/main/scoheart/blog/2nd.png?raw=true)
+![第二次请求](https://raw.githubusercontent.com/Scoheart/scoheart-notes/main/assets/408/network/http/http-caching/2nd.png)       
 
 然而，如果我们在 60 秒后再次访问 `http://localhost:3300`，那么同理可得出，此时缓存的响应处于过期状态，不可以被复用，需要重新向服务器发起请求。
 
 我们也可以从 **Network** 面板中看到，第三次请求的 **Transferred** 为 170 B，即重新向服务器发起请求获取新的响应。
 
-![Nodejs 响应头](https://github.com/Scoheart/scoheart-notes/blob/main/scoheart/blog/3rd.png?raw=true)
+![第三次请求](https://raw.githubusercontent.com/Scoheart/scoheart-notes/main/assets/408/network/http/http-caching/3rd.png)       
 
-## 重新验证 —— 过期不代表不可复用
+## 重新验证 —— 过期不代表完全失效
 
-当缓存的响应处于过期状态时，不代表该响应不可以被复用。
+当缓存的响应处于过期状态时，不代表该响应完全失效。
 
-过期状态的响应，可以被复用，但是需要重新验证。
+当一个缓存的响应变为 **过期**（stale）之后，缓存系统并不会立刻丢弃它，而是可以尝试通过 **验证**（Validation）机制来“刷新”这份响应，使其重新变为可用的**新鲜**（fresh）状态。
 
+> Validation is done by using a conditional request that includes an If-Modified-Since or If-None-Match request header.
 
+验证机制有以下方式：
 
+- Last-Modified/If-Modified-Since 验证，依据内容的最后修改时间来验证
+- ETag/If-None-Match 验证，依据内容的哈希值来验证
 
+### Last-Modified 验证
 
+假设我们第一次请求时，服务器返回的响应如下：
 
-![Nodejs 响应头转存失败，建议直接上传图片文件](https://raw.githubusercontent.com/Scoheart/scoheart-notes/main/scoheart/blog/1st.png)
+``` http
+HTTP/1.1 200 OK
+Content-Type: text/html
+Content-Length: 1024
+Date: Tue, 22 Feb 2022 22:22:22 GMT
+Last-Modified: Tue, 22 Feb 2022 22:00:00 GMT
+Cache-Control: max-age=3600
+
+<!doctype html>
+…
+```
+
+由于 HTTP 缓存机制，该响应被缓存至本地来提供复用。并且根据第一次请求的响应头，我们可以计算出缓存的响应的 **新鲜度寿命**（freshness_lifetime）为 3600 秒。
+
+$$
+\begin{align*}
+\mathit{freshness\_lifetime}
+&= \mathit{max\text{-}age} \\
+&= 3600s
+\end{align*}
+$$
+
+假设我们第二次请求时，当前时间为 `Tue, 22 Feb 2022 23:22:22 GMT` ，那么缓存的响应的 **当前年龄**（current_age）为 3600 秒。
+
+$$
+\begin{align*}
+\mathit{current\_age} 
+&= \mathit{now} - \mathit{Date} \\
+&= \text{Tue, 22 Feb 2022 23:22:22 GMT} - \text{Tue, 22 Feb 2022 22:22:22 GMT} \\
+&= 3600s
+\end{align*}
+$$
+
+那么，缓存的响应的 **新鲜度寿命**（freshness_lifetime）等于 **当前年龄**（current_age），即：
+$$
+\mathit{freshness\_lifetime}
+== \mathit{current\_age}
+$$
+
+于是，因为缓存的响应的 **新鲜度寿命**（freshness_lifetime）等于 **当前年龄**（current_age），所以缓存的响应处于 **过期**（stale）状态，不可以被复用，需要重新向服务器发起请求。
+
+但此时，由于缓存的响应在返回的时候，提供了 **Last-Modified** 字段，所以客户端会向原始服务器发送一个**条件请求**（conditional request），请求头中包含一个 **If-Modified-Since** 字段，值为缓存响应的 **Last-Modified** 字段。向服务器查询自指定时间以来（**Last-Modified**）是否有任何更改。
+
+如果内容自指定时间以来未更改，则服务器会返回一个 **304 状态码** 的响应。并且这个响应仅仅包含响应头，不包含响应体，它用来通知缓存系统，缓存的响应仍然有效，可以复用。于此同时，缓存系统会刷新缓存的响应的状态，将其重新变为可复用的**新鲜**（fresh）状态。
+
+如果内容自指定时间以来已更改，则服务器会返回一个 **200 状态码** 的响应。这个响应就是全新的响应。
+
+### ETag 验证
+
+ETag 和 Last-Modified 的流程大致相同，只是验证方式的切换。这里不再赘述。
+
+### 强制验证
+
+当服务器将响应头中的 **Cache-Control** 字段的值设置为 **no-cache** 时，表示服务器告知任何缓存，在未与源服务器验证并得到成功响应之前，不得将该响应用于后续请求，即不可以直接复用缓存的响应。
+
+也就是说缓存可以存储该响应，但每次重用前都必须向源服务器验证。
+
+例如，我们第一次请求时，服务器返回的响应如下：
+
+``` http
+HTTP/1.1 200 OK
+Content-Type: text/html
+Content-Length: 1024
+Date: Tue, 22 Feb 2022 22:22:22 GMT
+Last-Modified: Tue, 22 Feb 2022 22:00:00 GMT
+ETag: "deadbeef"
+Cache-Control: no-cache
+
+<!doctype html>
+…
+```
+
+由于 HTTP 缓存机制，该响应被缓存至本地来提供复用。但是因为 **Cache-Control** 字段的值为 **no-cache** ，该响应不会被直接复用，而是需要向服务器发起请求验证。
+
+也就是说我们后续的请求，都会向服务器发起请求验证。依据 **Last-Modified/If-Modified-Since** 或 **ETag/If-None-Match** 来验证缓存的响应是否仍然有效。验证的流程和上面介绍的一致。
+
+如果请求的资源已更新，客户端将收到 **200 OK** 响应，并且使用新的响应；如果请求的资源未更新，客户端将收到 **304 Not Modified** 响应，同时复用缓存的响应。
+
+***简而言之，普通的验证被用来刷新缓存的响应的新鲜状态，而强制验证则是迫使客户端在复用缓存的响应前，都先向服务器发起条件请求验证缓存响应是否仍然有效。***
