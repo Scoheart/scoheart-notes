@@ -411,9 +411,15 @@ fetch("/", { cache: "reload" });
 
 我们大致可以将验证机制通过一个表格来对比：
 
-| 验证机制                  | 触发时机                                                                      | 是否条件请求 | 使用的 Cache-Control                                  | 服务器可能响应 | 缓存复用情况               |
-| ------------------------- | ----------------------------------------------------------------------------- | ------------ | ----------------------------------------------------- | -------------- | -------------------------- |
-| 通用验证 Validation       | 新鲜度过期（stale）后的请求                                                   | 是           | Cache-Control: max-age（response）                    | 200/304        | 验证后可复用               |
-| 强制验证 Force Validation | 任何请求                                                                      | 是           | Cache-Control: no-cache（response）                   | 200/304        | 验证后可复用               |
-| 重新加载 Reload           | 用户点击浏览器刷新按钮 或 按 Command + R <br/> 或在 Fetch API 中使用 no-cache | 是           | Cache-Control: max-age=0（request） + If-*            | 200/304        | 验证后可复用               |
-| 强制重新加载 Force Reload | 用户按 Command + Shift + R <br/> 或在 Fetch API 中使用 reload                 | 否           | Pragma: no-cache + Cache-Control: no-cache（request） | 仅200          | 缓存被绕过，强制拉取新资源 |
+| 验证机制                  | 触发时机                                               | 是否条件请求 | 使用的 Cache-Control                                  | 服务器可能响应 | 缓存复用情况               |
+| ------------------------- | ------------------------------------------------------ | ------------ | ----------------------------------------------------- | -------------- | -------------------------- |
+| 通用验证 Validation       | 新鲜度过期（stale）后的请求                            | 是           | Cache-Control: max-age（response）                    | 200/304        | 验证后可复用               |
+| 强制验证 Force Validation | 任何请求                                               | 是           | Cache-Control: no-cache（response）                   | 200/304        | 验证后可复用               |
+| 重新加载 Reload           | 刷新按钮 <br/> Command + R <br/> Fetch API（no-cache） | 是           | Cache-Control: max-age=0（request） + If-*            | 200/304        | 验证后可复用               |
+| 强制重新加载 Force Reload | Command + Shift + R <br/> Fetch API（reload）          | 否           | Pragma: no-cache + Cache-Control: no-cache（request） | 仅200          | 缓存被绕过，强制拉取新资源 |
+
+## 参考
+
+- [MDN - HTTP Caching](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Caching)
+- [RFC 7234 - Hypertext Transfer Protocol (HTTP/1.1): Caching](https://datatracker.ietf.org/doc/html/rfc7234)
+- [RFC 9111 - HTTP Caching](https://datatracker.ietf.org/doc/html/rfc9111)
