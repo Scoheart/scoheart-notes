@@ -383,7 +383,7 @@ fetch("/", { cache: "no-cache" });
 
 ### 强制重新加载（Force Reload）
 
-强制重新加载（Force Reload）操作是另一种绕过缓存的方案，按下快捷键 `Command + Shift + R` （Mac）或者显示开启 禁用缓存（Disable Cache）等操作来触发。
+**强制重新加载**（Force Reload）操作是另一种绕过缓存的方案，按下快捷键 `Command + Shift + R` （Mac）或者显示开启 禁用缓存（Disable Cache）等操作来触发。
 
 ![Force Reload](https://raw.githubusercontent.com/Scoheart/scoheart-notes/main/assets/408/network/http/http-caching/force-reload.png)
 
@@ -396,5 +396,24 @@ Pragma: no-cache
 Cache-Control: no-cache
 ``` 
 
-由于这是携带 no-cache 的非条件请求，客户端将始终从源服务器获取 200 OK 响应。
+由于这是携带 no-cache 的非条件请求，客户端将始终从源服务器获取 **200 OK** 响应。
 
+Fetch 标准中也定义了此逻辑，可通过下面的代码实现：
+
+``` js
+// Note: "reload" — rather than "no-cache" — is the right mode for a "force reload"
+fetch("/", { cache: "reload" });
+```
+
+这里值得注意的一点是，cache 的值为 **reload** ，而不是 **no-cache** 。
+
+### 验证机制对比
+
+我们大致可以将验证机制通过一个表格来对比：
+
+| 验证机制                  | 触发时机                                                                      | 是否条件请求 | 使用的 Cache-Control                                  | 服务器可能响应 | 缓存复用情况               |
+| ------------------------- | ----------------------------------------------------------------------------- | ------------ | ----------------------------------------------------- | -------------- | -------------------------- |
+| 通用验证 Validation       | 新鲜度过期（stale）后的请求                                                   | 是           | Cache-Control: max-age（response）                    | 200/304        | 验证后可复用               |
+| 强制验证 Force Validation | 任何请求                                                                      | 是           | Cache-Control: no-cache（response）                   | 200/304        | 验证后可复用               |
+| 重新加载 Reload           | 用户点击浏览器刷新按钮 或 按 Command + R <br/> 或在 Fetch API 中使用 no-cache | 是           | Cache-Control: max-age=0（request） + If-*            | 200/304        | 验证后可复用               |
+| 强制重新加载 Force Reload | 用户按 Command + Shift + R <br/> 或在 Fetch API 中使用 reload                 | 否           | Pragma: no-cache + Cache-Control: no-cache（request） | 仅200          | 缓存被绕过，强制拉取新资源 |
