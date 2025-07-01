@@ -354,7 +354,7 @@ Cache-Control: no-cache
 
 浏览器端的重新加载（Reload）与强制重新加载（Force Reload）操作，即是客户端发起验证的典型场景。
 
-## 重新加载（Reload）
+### 重新加载（Reload）
 
 为恢复窗口异常或更新至资源最新版本，浏览器为用户提供了**重新加载**（Reload）功能。可以通过点击浏览器工具栏的刷新按钮，或者按下快捷键 `Command + R` （Mac）等操作来触发。
 
@@ -370,7 +370,7 @@ If-None-Match: "deadbeef"
 If-Modified-Since: Tue, 22 Feb 2022 20:20:20 GMT
 ```
 
-请求中的 **max-age=0** 指令声明 ​​"仅复用生成时间 ≤ 0 秒的响应"​​ —— 这意味着缓存的响应不会被复用。同时通过 **If-None-Match** 和 **If-Modified-Since** 头部触发服务端验证。验证部分的机制与上文介绍的一致。
+请求中的 **max-age=0** 指令声明 ​​"仅复用生成时间 ≤ 0 秒的响应"​​ —— 这意味着缓存的响应不会被复用。同时通过携带 **If-None-Match** 和 **If-Modified-Since** 请求头，发起 **条件请求**（conditional request），触发服务端验证。验证部分的机制与上文介绍的一致。
 
 Fetch 标准中也定义了此逻辑，可通过下面的代码实现：
 
@@ -381,5 +381,20 @@ fetch("/", { cache: "no-cache" });
 
 这里值得注意的一点是，cache 的值为 **no-cache** ，而不是 **reload** 。
 
-## 强制重新加载（Force Reload）
+### 强制重新加载（Force Reload）
+
+强制重新加载（Force Reload）操作是另一种绕过缓存的方案，按下快捷键 `Command + Shift + R` （Mac）或者显示开启 禁用缓存（Disable Cache）等操作来触发。
+
+![Force Reload](https://raw.githubusercontent.com/Scoheart/scoheart-notes/main/assets/408/network/http/http-caching/force-reload.png)
+
+强制重新加载时发送的 HTTP 请求简化示例如下（Chrome、Edge 和 Firefox 的请求结构与下文高度相似；Safari 的请求结构略有差异）：
+
+``` http
+GET / HTTP/1.1
+Host: example.com
+Pragma: no-cache
+Cache-Control: no-cache
+``` 
+
+由于这是携带 no-cache 的非条件请求，客户端将始终从源服务器获取 200 OK 响应。
 
