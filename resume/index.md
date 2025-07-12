@@ -1,0 +1,11 @@
+- 熟悉基本数据结构与算法，掌握 TCP/IP 网络协议栈，熟练运用 Ubuntu/CentOS 等常见 Linux 发行版，及 Shell 脚本开发
+- 掌握 HTML5/CSS3/JavaScript，了解 ES2015+ 特性，熟练使用 TypeScript/Flow，熟悉 Vue/React/Svelte 等前端框架
+- 熟悉渲染框架 Nextjs、Nuxtjs 等，掌握 CSR、SSR、SSG、ISR、Streaming SSR 等渲染方式及 Islands 架构的基本原理
+- 熟悉 Browser/Node，以及了解其他 JS Runtime：Deno/Bun 等，自主编译嵌入过 JS Engine，如 Hermes/V8 等引擎
+- 丰富的工程化经验，熟练运用 Babel/tsc 等转译器，Webpack/Vite/Rollup 等打包器，Monorepo 单仓多库，pnpm 包管理等
+- 熟悉 Node，具备 Scaffold/CLI 开发经验，能从 0 到 1 配置项目工程化，熟悉 Addon，能运用 V8/NAN/N-API 进行开发
+- 了解移动端开发知识，能利用 SwiftUI/UIKit 或 Jetpack Compose/XML 进行 Native 开发，构建简单项目以及 UI 界面
+- 了解跨平台应用开发如 Electron/Tauri 桌面端，React Native 移动端，能组合 C++/Rust 等语言进行跨平台开发辅助
+- 有 Java 服务端开发经验，掌握运用 MySQL/Redis，了解 Spring 全家桶，微服务，熟悉 docker、jenkins 以及 CI/CD
+- 紧跟行业新趋势，熟练运用 AI 辅助开发：Cursor/ChatGPT/Claude，拥抱学习 AI 领域知识，如 Prompt/LLM/MCP 等
+- 热爱编程，探索技术广度，学习 Python 爬虫来数据收集，阅读 Go 网络代理源码熟悉网络协议，了解 C++ 编译工具链路等
