@@ -51,6 +51,20 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 adb shell monkey -p com.example.demo -c android.intent.category.LAUNCHER 1
 ```
 
+phone:
+
+``` bash
+adb devices
+adb devices -l
+
+adb -s 6876e9a install -r app/build/outputs/apk/debug/app-debug.apk
+
+adb shell monkey -p com.example.demo -c android.intent.category.LAUNCHER 1
+adb -s <serial> shell monkey -p com.example.demo -c android.intent.category.LAUNCHER 1
+adb -s 6876e9a shell monkey -p com.example.demo -c android.intent.category.LAUNCHER 1
+```
+
+
 
 二、常见的生命周期 / 聚合任务（按用途分类）
 
