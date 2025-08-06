@@ -30,3 +30,15 @@ function reverseList(head: ListNode | null): ListNode | null {
     }
     return pre
 };
+
+// function reverseList(head: ListNode | null): ListNode | null {
+//     let current = head;
+//     let pre = null;
+//     while (current) {
+//         const next = current.next;
+//         current.next = pre;
+//         pre = current;
+//         current = next;
+//     }
+//     return pre;
+// };
