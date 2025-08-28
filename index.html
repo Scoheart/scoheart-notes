@@ -10,27 +10,19 @@
 <body>
     <div id="outer">
         <div id="inner">ssss</div>
+        <div id="inner">ssss</div>
+        <div id="inner">ssss</div>
+        <div id="inner">ssss</div>
+        <div id="inner">ssss</div>
     </div>
+
     <script>
-        new MutationObserver(function () { console.log('mutate'); })
-            .observe(outer, { attributes: true });
-
-        function onClick() {
-            console.log('click');
-
-            setTimeout(function () {
-                console.log('timeout');
-            }, 0);
-
-            Promise.resolve().then(function () {
-                console.log('promise');
-            });
-
-            outer.setAttribute('data-random', Math.random());
+        const elements = document.getElementsByTagName("*");
+        const set = new Set();
+        for (const element of elements) {
+            set.add(element);
         }
-
-        inner.addEventListener('click', onClick);
-        outer.addEventListener('click', onClick);
+        console.log(Array.from(set))
     </script>
 </body>
 

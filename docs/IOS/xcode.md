@@ -151,6 +151,8 @@ xcodebuild \
     -derivedDataPath ./build-device \
     build
 
+xcrun devicectl list devices 
+
 xcrun devicectl device install app --device 56423B97-C045-587E-959A-21EAA8BDBE40 ./build-device/Build/Products/Debug-iphoneos/reminder.app
 
 xcrun devicectl device process launch --terminate-existing --device 56423B97-C045-587E-959A-21EAA8BDBE40 com.scoheart.reminder --console 
@@ -160,6 +162,12 @@ xcrun devicectl device process launch --device 56423B97-C045-587E-959A-21EAA8BDB
 ```
 
 ## UIkit & SwiftUI
+
+@State          — 我自己的小状态
+@Binding        — 改别人的状态
+@StateObject    — 第一次创建并持有一个对象
+@ObservedObject — 外面给我一个对象，我来观察
+@EnvironmentObject — 全局注入环境对象
 
 ```swift
 UIApplication  (单例)

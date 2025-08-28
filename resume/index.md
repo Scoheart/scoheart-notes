@@ -29,8 +29,8 @@
 
 3. Codify D2C Platform（Client/Server） - D2C 编排平台 - 组件/项目生成
 - 独立实现 DSL Style -> CSS 的编译链路，将 Design Tokens 转换为层级化 CSS 变量，动态映射 Auto Layout 至 Flexbox，探索 Layout 布局优化算法，针对渐变、阴影等特效实施智能降级策略，实现 DSL Style → CSS 的像素级还原，辅助实现 DSL Style -> SwiftUI/Compose 的样式层转换
-- 辅助实现 DSL -> Vue 组件的转换，拼装单文件组件（SFC）三段式结构，注入响应式模板、作用域样式及轻量级事件脚本
-- 基于 RBAC 权限模型，以 NestJS + MongoDB + Redis + GraphQL 构建高性能 Server，支撑组件与项目生成服务
+- 设计 RBAC 权限模型，基于 NestJS 技术体系构建 D2C Runtime Server，实现项目初始化、生成代码、区块管理、代码推送等服务，支撑 D2C 基础服务建设
+- 辅助实现 DSL -> Vue 组件的转换，拼装单文件组件（SFC）三段式结构，注入响应式模板、作用域样式及轻量级事件预留
 
 
 1. 网盘 bpnode 渲染服务（CSR/SSR/SSG）维护
@@ -44,4 +44,4 @@
 - 深入理解网盘 H5 Hybrid 核心机制（JSBridge/URI Schemes、离线包）及完整开发链路，累积参与研发 H5 页面 10+
 
 4. 网盘四端合一 PC/Mac 桌面端维护
-- 深入理解 Electron 进程模型（主进程/渲染进程）以及上下文隔离机制（页面脚本/预加载脚本），熟悉进程间通信 IPC（ipcMain/ipcRenderer），熟悉 Node-Addon 与 Electron的结合，以及 FFI（koffi、ffi-napi等），进行日常项目代码维护
+- 深入理解 Electron 进程模型（主进程/渲染进程）以及上下文隔离机制（页面脚本/预加载脚本），熟悉进程间通信 IPC（ipcMain/ipcRenderer），进行日常项目代码维护
