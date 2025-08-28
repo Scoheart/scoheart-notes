@@ -15,3 +15,6 @@ function longestCommonSubsequence(text1: string, text2: string): number {
     }
     return dp[m][n];
 };
+
+
+console.log(longestCommonSubsequence("abc", "ace"))

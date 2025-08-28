@@ -25,5 +25,10 @@
 			"$1",
 			"});"
 		]
+	},
+	"console": {
+		"scope": "javascript,typescript",
+		"prefix": "clg",
+		"body": "console.log($1)"
 	}
 }

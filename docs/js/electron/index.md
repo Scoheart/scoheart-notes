@@ -9,3 +9,6 @@ pnpm install electron
 ```
 
 ## 
+
+- BrowserWindow = BaseWindow
+- BrowserView = WebContentsView
