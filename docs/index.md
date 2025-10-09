@@ -127,9 +127,106 @@ Node.js v24.9.0 已成功下载到您的系统中。您可以通过以下任一�
 
 ## 拓展技巧
 
+### 面向对象程序设计
+
+#### UML Unified Modeling Language
+
+> https://www.omg.org/spec/UML/2.5.1/PDF
+
+UML（Unified Modeling Language，统一建模语言）是由 OMG（Object Management Group）制定的标准化可视化建模语言，用来描述、设计、构建与文档化软件密集型系统。它提供一套有语义的图形记法，帮助不同角色（产品、架构、开发、测试、运维）用同一种“图形语言”沟通系统的结构与行为。
+
+``` mermaid
+flowchart TD
+    A["Diagram"]
+
+    %% Level 1
+    B["Structure Diagram"]
+    C["Behavior Diagram"]
+    A --> B
+    A --> C
+
+    %% Structure children
+    B1["Class Diagram"]
+    B2["Component Diagram"]
+    B3["Object Diagram"]
+    B --> B1
+    B --> B2
+    B --> B3
+
+    %% Structure grandchildren
+    B1a["Composite Structure Diagram"]
+    B1b["Profile Diagram"]
+    B2a["Deployment Diagram"]
+    B3a["Package Diagram"]
+    B1 --> B1a
+    B1 --> B1b
+    B2 --> B2a
+    B3 --> B3a
+
+    %% Behavior children
+    C1["Activity Diagram"]
+    C2["Use Case Diagram"]
+    C3["State Machine Diagram"]
+    C4["Interaction Diagram"]
+    C --> C1
+    C --> C2
+    C --> C3
+    C --> C4
+
+    %% Interaction grandchildren
+    C4a["Sequence Diagram"]
+    C4b["Interaction Overview Diagram"]
+    C4c["Communication Diagram"]
+    C4d["Timing Diagram"]
+    C4 --> C4a
+    C4 --> C4b
+    C4 --> C4c
+    C4 --> C4d
+```
+
+#### 需求分析 - OOA Object-Oriented Analysis
+
+明确系统要解决的问题和功能需求，理解问题领域，分析系统需要完成哪些功能（输入、处理、输出）。
+
+OOA 关注系统需要做什么（What）
+
+常用 UML 图
+- Use Case
+- Class
+- Activity
+- State
+
+结果产物
+- 概念模型（Conceptual Model）
+- 领域模型（Domain Model）
+- 用例文档（Use Case Specification）
+
+#### 系统设计 - OOD Object-Oriented Design
+
+把需求转化为可实现的系统结构，定义类、对象、方法、属性等。
+
+OOD 关注系统如何落实（How）
+
+常用 UML 图
+- Class
+- Sequence
+- Component
+- Package
+- Deployment
+
+#### 编码实现 - OOP Object-Oriented Programming
+
+将设计转化为可运行的程序代码，据设计编码与测试
+
+OOP 关注代码怎么编写 (DO)
+
 ### Prompt Engineering
 
+> https://github.com/dair-ai/Prompt-Engineering-Guide
+
 ### Context Engineering
+
+> https://www.promptingguide.ai/guides/context-engineering-guide
 
 ### SDD - Spec-Driven Development
 
@@ -142,6 +239,9 @@ Node.js v24.9.0 已成功下载到您的系统中。您可以通过以下任一�
 - Plan：攻略与配装 - 战术与攻略
 - Tasks：任务告示板 - 并行刷副本
 - Implementation：打怪刷本
+
+##### /speckit.constitution
+
 
 Constitution 可以视为 Project 级别的规范。
 
@@ -219,6 +319,39 @@ npx bmad-method install
 Think of AGENTS.md as a README for agents: a dedicated, predictable place to provide the context and instructions to help AI coding agents work on your project.
 
 AGENTS.md 其实就是一份提供给 AI 阅读的 README，帮助 AI 更好地理解项目、完成任务。
+
+### Slash Command
+
+> https://docs.claude.com/en/docs/claude-code/slash-commands
+
+Slash Command 是 Claude Code 提供的一种命令行交互方式。在交互式会话中，通过斜杠命令控制 Claude 的行为。
+
+#### Custom slash commands
+
+Custom Slash Commands 是 Claude Code 中的一项特性。简而言之，它允许你把常用的 prompt（或工作流程）写成文件，然后在 Claude Code 中通过 /命令名 的方式快速调用。
+
+创建一个自己的 Slash Command 需要完成以下步骤：
+
+在 .claude/commands 目录下创建一个 markdown 文件，文件名即为 Slash Command。
+
+``` markdown
+---
+description: Say hello with the user's name
+---
+
+Please greet the user warmly.
+
+The user said: $ARGUMENTS
+
+If they provided a name, use it in your greeting. If not, just say a friendly hello.
+```
+
+使用
+
+``` bash
+/hello
+/hello Scoheart
+```
 
 ### Hook
 
@@ -474,3 +607,5 @@ if __name__ == "__main__":
     sys.exit(main())
 
 ```
+
+### Plan Mode
