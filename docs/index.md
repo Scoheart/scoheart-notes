@@ -60,6 +60,12 @@ export ANTHROPIC_BASE_URL=https://anyrouter.top
 export GOOGLE_CLOUD_PROJECT=xxx
 ```
 
+2. Use Gemini API Key
+
+```bash
+export GEMINI_API_KEY=xxx
+```
+
 Codex CLI
 
 ### 权限模型
@@ -119,9 +125,94 @@ Node.js v24.9.0 已成功下载到您的系统中。您可以通过以下任一�
 
 安装完成后，您可以打开终端并运行 `node --version` 和 `npm --version` 来验证安装是否成功。
 
-### 拓展技巧
+## 拓展技巧
 
-#### AGENTS.md
+### Prompt Engineering
+
+### Context Engineering
+
+### SDD - Spec-Driven Development
+
+#### Spec-kit
+
+> https://github.com/github/spec-kit
+
+- Constitution：游戏规则
+- Specification：主线任务 - 目标与胜利条件
+- Plan：攻略与配装 - 战术与攻略
+- Tasks：任务告示板 - 并行刷副本
+- Implementation：打怪刷本
+
+Constitution 可以视为 Project 级别的规范。
+
+而 Specify - Plan - Tasks - Implementation 可以视为 Feature 级别的开发流程。
+
+``` mermaid
+---
+title: Specify - Plan - Tasks - Implementation 开发流程
+---
+
+graph LR
+   A[Specify]
+   B[Plan]
+   C[Tasks]
+   D[Implementation]
+   E(Code)
+   
+   A e1@-- Create the spec --> B
+   B e2@-- Create a technical implementation plan --> C
+   C e3@-- Break down into tasks --> D
+   D e4@-- Execute implementation --o E
+   e1@{ animation: fast }
+   e2@{ animation: fast }
+   e3@{ animation: fast }
+   e4@{ animation: fast }
+```
+
+下载
+
+``` bash
+brew install uv
+uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
+uv tool update-shell
+```
+
+使用
+
+``` bash
+specify init your-project-name --ai claude --script ps
+
+claude
+
+/speckit.constitution Create principles focused on code quality, testing standards, user experience consistency, and performance requirements
+
+/speckit.specify Build an application that can help me organize my photos in separate photo albums. Albums are grouped by date and can be re-organized by dragging and dropping on the main page. Albums are never in other nested albums. Within each album, photos are previewed in a tile-like interface.
+
+/speckit.plan The application uses Vite with minimal number of libraries. Use vanilla HTML, CSS, and JavaScript as much as possible. Images are not uploaded anywhere and metadata is stored in a local SQLite database.
+
+/speckit.tasks
+
+/speckit.implementation
+```
+
+#### BMAD-METHOD
+
+> https://github.com/bmad-code-org/BMAD-METHOD
+
+下载
+
+``` bash
+npx bmad-method install
+```
+
+#### OpenSpec
+
+### Agent Client Protocol
+
+> https://agentclientprotocol.com/overview/introduction
+
+
+### AGENTS.md
 
 > https://agents.md/#examples
 
@@ -129,27 +220,27 @@ Think of AGENTS.md as a README for agents: a dedicated, predictable place to pro
 
 AGENTS.md 其实就是一份提供给 AI 阅读的 README，帮助 AI 更好地理解项目、完成任务。
 
-#### Hook
+### Hook
 
 Hook（钩子） 是 Claude Code 提供的一种 事件驱动机制。允许我们在 Claude Code 的特定生命周期阶段（如启动、执行工具、用户输入等），自动执行自定义脚本或命令。
 
 > 如果想查看 Hook 的输出，需要 `ctrl + o` 开启输出详情。
 
-##### Hook 事件类型
+#### Hook 事件类型
 
 | Hook 事件            | 触发时机                                      | 是否支持 matcher | 典型用途                                                                 |
 | -------------------- | --------------------------------------------- | ---------------- | ------------------------------------------------------------------------ |
-| **PreToolUse**       | Claude 调用某个工具之前                       | ✅ 是            | 在工具执行前进行权限检查、输入验证、拦截敏感操作（如禁止写 `.env` 文件） |
-| **PostToolUse**      | 工具执行完成后                                | ✅ 是            | 对工具结果做校验、分析、日志记录或向 Claude 注入额外上下文               |
-| **Notification**     | Claude 向用户发送系统通知时                   | ❌ 否            | 监控通知事件，例如权限请求、会话状态变化等                               |
-| **UserPromptSubmit** | 用户提交消息后、Claude 处理前                 | ❌ 否            | 检查用户输入是否合法，自动注入提示词或过滤敏感内容                       |
-| **Stop**             | 主 Agent 任务完成、准备停止时                 | ❌ 否            | 控制 Claude 是否应结束会话，可用于收尾逻辑或阻止中止                     |
-| **SubagentStop**     | 子 Agent（例如工具代理）结束时                | ❌ 否            | 管理子任务生命周期，清理资源或决定是否继续执行                           |
-| **PreCompact**       | Claude 准备压缩上下文（Compact）前            | ✅ 是            | 在上下文压缩前执行预处理，如保留重要内容或过滤敏感信息                   |
-| **SessionStart**     | 新会话启动时（包括 resume / clear / compact） | ✅ 是            | 初始化上下文、加载项目信息、设定环境变量                                 |
-| **SessionEnd**       | 整个会话结束时                                | ❌ 否            | 会话收尾、日志记录、触发外部清理或通知任务                               |
+| **PreToolUse**       | Claude 调用某个工具之前                       | ✅ 是             | 在工具执行前进行权限检查、输入验证、拦截敏感操作（如禁止写 `.env` 文件） |
+| **PostToolUse**      | 工具执行完成后                                | ✅ 是             | 对工具结果做校验、分析、日志记录或向 Claude 注入额外上下文               |
+| **Notification**     | Claude 向用户发送系统通知时                   | ❌ 否             | 监控通知事件，例如权限请求、会话状态变化等                               |
+| **UserPromptSubmit** | 用户提交消息后、Claude 处理前                 | ❌ 否             | 检查用户输入是否合法，自动注入提示词或过滤敏感内容                       |
+| **Stop**             | 主 Agent 任务完成、准备停止时                 | ❌ 否             | 控制 Claude 是否应结束会话，可用于收尾逻辑或阻止中止                     |
+| **SubagentStop**     | 子 Agent（例如工具代理）结束时                | ❌ 否             | 管理子任务生命周期，清理资源或决定是否继续执行                           |
+| **PreCompact**       | Claude 准备压缩上下文（Compact）前            | ✅ 是             | 在上下文压缩前执行预处理，如保留重要内容或过滤敏感信息                   |
+| **SessionStart**     | 新会话启动时（包括 resume / clear / compact） | ✅ 是             | 初始化上下文、加载项目信息、设定环境变量                                 |
+| **SessionEnd**       | 整个会话结束时                                | ❌ 否             | 会话收尾、日志记录、触发外部清理或通知任务                               |
 
-##### 动手实现 Hook
+#### 动手实现 Hook
 
 实现一个 Hook， Claude Code 完成任务后，通过钉钉机器人发送通知提醒卡片，点击卡片可直接跳转相应 IDE.
 
