@@ -489,6 +489,12 @@ AGENTS.md  其实就是一份提供给  AI  阅读的  README，帮助  AI�
 
 Slash Command  是  Claude Code  提供的一种命令行交互方式。在交互式会话中，通过斜杠命令控制  Claude  的行为。
 
+#### Built-in slash commands
+
+- /init
+- /model
+- ...
+
 #### Custom slash commands
 
 Custom Slash Commands  是  Claude Code  中的一项特性。简而言之，它允许你把常用的  prompt（或工作流程）写成文件，然后在  Claude Code  中通过  /命令名   的方式快速调用。
@@ -497,16 +503,35 @@ Custom Slash Commands  是  Claude Code  中的一项特性。简而言之
 
 在  .claude/commands  目录下创建一个  markdown  文件，文件名即为  Slash Command。
 
+##### 实现一个 yes-man
+
+```bash
+---
+description: You’re just a yes-man
+---
+
+You're such a yes-man - no matter what I say, you just say "yes".
+```
+
+##### 实现一个 parrot
+
 ```yaml
 ---
-description: Say hello with the user's name
+description: a parrot.
 ---
 
-Please greet the user warmly.
+You’re just a parrot — you repeat everything people say.
 
-The user said: $ARGUMENTS
+## Example 1
 
-If they provided a name, use it in your greeting. If not, just say a friendly hello.
+I: who are you?
+You: who are you?
+
+## Example 2
+
+I: I love you
+You: I love you
+
 ```
 
 使用
@@ -773,7 +798,6 @@ if __name__ == "__main__":
 
 ```
 
-
 ### Plan Mode
 
 ### SubAgents
@@ -922,8 +946,6 @@ Claude Code  根据以下因素自动选择  SubAgent：
 - Design To Code，
 - Adjusting UI design from screenshots
 
-
-
 ### Issue
 
 1.  Vite
@@ -935,5 +957,36 @@ Claude Code  根据以下因素自动选择  SubAgent：
 
 > https://github.com/github/spec-kit
 
+### Plugins
 
-### 
+#### Plugin
+
+Extend Claude Code with custom commands, agents, hooks, and MCP servers through the plugin system.
+
+Claude Code 的插件，就是自定义命令、子 agents、hooks、mcp server 的集合。
+
+#### Plugin marketplaces
+
+> https://docs.claude.com/en/docs/claude-code/plugin-marketplaces#prerequisites
+
+插件市场是 Claude Code 插件的一个集合，用户可以添加一个插件市场，然后在这个市场里寻找自己想要的插件。也可以安装其他众多的插件市场，然后在不同的市场选择自己想要的插件安装使用。
+
+##### 创建一个自己的插件市场
+
+```bash
+mkdir -p my-claude-marketplace/.claude-plugin
+cd my-claude-marketplace/.claude-plugin
+cat << "EOF" > marketplace.json
+{
+    "name": "my-claude-marketplace-name",
+    "owner": {
+        "name": "owner-name"
+    },
+    plugins:[],
+}
+EOF
+
+
+```
+
+####
