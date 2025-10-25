@@ -87,6 +87,8 @@
 
 经过上面的了解，我们知道，JavaScript 是一种解释型语言。所以它的执行是需要一个解释器的。而这个解释器，我们通常又会称之为 JavaScript Engine，即 JS 引擎。
 
+### JavaScript Interpreter/ JavaScript Engine
+
 现在仍在流行的 JS 引擎有这些：
 
 | JavaScript Engine | Company or Developer |
@@ -99,3 +101,18 @@
 | Hermes            | Facebook             |
 | Carakan           | Opera                |
 | Chakra            | Microsoft            |
+
+### JavaScript Runtime
+
+如果我们仅仅只是执行 JavaScript 代码，那么我们只需要一个 JavaScript Engine 就可以了。但是，我们往往需要 JavaScript 实现一些其他的功能，例如，我们想要在 JavaScript 代码中访问文件系统，或者创建 TCP/UDP 服务器，或者发送 HTTP 请求等。这个时候，如果仅仅只是一个 JavaScript Engine，那么我们是无法实现这些功能的。
+
+所以，我们会将 JavaScript Engine 和 一些其他的功能集成在一起，形成一个 JavaScript Runtime。
+
+例如，最常见的 JavaScript Runtime 是浏览器，对于浏览器而言，它给 JavaScript 提供了访问 Window 对象，操作 DOM 对象、发送 Ajax 请求等 Web APIs。Nodejs 给其中的 JavaScript 提供了访问文件系统、创建 TCP/UDP 服务器、发送 HTTP 请求等 Node APIs。
+
+| JavaScript Runtime |                  Built-in JavaScript Engines                   |                APIs                 |
+| :----------------: | :------------------------------------------------------------: | :---------------------------------: |
+|      Browser       | Chrome:V8 <br> Safari:JavaScriptCore <br> Firefox:SpiderMonkey |    Window、DOM、XMLHttpRequest……    |
+|       Nodejs       |                               V8                               |          fs、http、path……           |
+|        Deno        |                               V8                               |     File System、I/O、Network……     |
+|        Bun         |                         JavaScriptCore                         | File I/O、HTTP Server、WebSockets…… |
