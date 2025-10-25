@@ -85,7 +85,7 @@
 
 ## 我们要学的编程语言 - JavaScript
 
-### JavaScript
+### ECMAScript
 
 JavaScript 是一种基于 ECMAScript 规范的实现。它是一种高级、解释性的脚本语言，通常用于在 Web 页面上实现动态交互效果。
 
