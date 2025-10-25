@@ -85,9 +85,35 @@
 
 ## 我们要学的编程语言 - JavaScript
 
-经过上面的了解，我们知道，JavaScript 是一种解释型语言。所以它的执行是需要一个解释器的。而这个解释器，我们通常又会称之为 JavaScript Engine，即 JS 引擎。
+### JavaScript
+
+JavaScript 是一种基于 ECMAScript 规范的实现。它是一种高级、解释性的脚本语言，通常用于在 Web 页面上实现动态交互效果。
+
+ECMAScript is the specification for JavaScript. All versions:
+
+| Version      | Release | Key Features                                                                                                            |
+| ------------ | ------- | ----------------------------------------------------------------------------------------------------------------------- |
+| ES1          | 1997-06 | First edition standardization (based on JavaScript 1.1)                                                                 |
+| ES2          | 1998-06 | Editorial changes to align with ISO/IEC 16262:1998                                                                      |
+| ES3          | 1999-12 | Regular expressions, `try...catch`, string/number formatting improvements                                               |
+| ES4          | —       | Abandoned; many ideas later incorporated into ES2015+                                                                   |
+| ES5          | 2009-12 | Strict mode, native JSON, `Object.defineProperty`, getters/setters                                                      |
+| ES5.1        | 2011-06 | Editorial changes to align with ISO/IEC 16262:2011                                                                      |
+| ES2015 (ES6) | 2015-06 | `let/const`, classes, modules, arrow functions, template strings, destructuring, `Promise`, generators, `Map/Set`       |
+| ES2016       | 2016-06 | Exponentiation operator `**`, `Array.prototype.includes`                                                                |
+| ES2017       | 2017-06 | `async/await`, `Object.values/entries`, string padding, trailing commas, shared memory/Atomics                          |
+| ES2018       | 2018-06 | Object rest/spread, `Promise.prototype.finally`, async iteration, RegExp enhancements (dotAll, named capture, etc.)     |
+| ES2019       | 2019-06 | `Array.prototype.flat/flatMap`, `Object.fromEntries`, `trimStart/trimEnd`, optional `catch` binding                     |
+| ES2020       | 2020-06 | BigInt, dynamic `import()`, optional chaining `?.`, nullish coalescing `??`, `Promise.allSettled`, `globalThis`         |
+| ES2021       | 2021-06 | Logical assignment (`&&=`, `\|\|=`, `??=`), numeric separators, `String.prototype.replaceAll`, `Promise.any`, WeakRef   |
+| ES2022       | 2022-06 | Class fields/private members/methods, static initialization blocks, top-level `await`, `Object.hasOwn`, `.at()`         |
+| ES2023       | 2023-06 | Immutable array methods: `toSorted`/`toReversed`/`toSpliced`/`with`, `findLast`/`findLastIndex`, Hashbang syntax `#!`   |
+| ES2024       | 2024-06 | `Object.groupBy/Map.groupBy`, `Promise.withResolvers`, Set methods (`union`/`intersection`), RegExp `/v` flag           |
+| ES2025       | 2025-06 | Iterator helpers (`map`/`filter`/`take`/`drop`/`toArray`), Import Attributes, JSON modules, `Promise.try`, Float16Array |
 
 ### JavaScript Interpreter/ JavaScript Engine
+
+经过上面的了解，我们知道，JavaScript 是一种解释型语言。所以它的执行是需要一个解释器的。而这个解释器，我们通常又会称之为 JavaScript Engine，即 JS 引擎。
 
 现在仍在流行的 JS 引擎有这些：
 
