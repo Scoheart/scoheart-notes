@@ -1,1 +1,0 @@
-npx tsc a.ts --module nodenext --moduleResolution nodenext --sourceMap true && node --inspect-brk a.j
