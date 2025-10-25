@@ -97,6 +97,6 @@ Slash Commands 是 Claude Code 提供的一种命令行交互方式。在交互�
 /init   Initialize a new CLAUDE.md file with codebase documentation
 ```
 
-### /init
+#### /init
 
 它是 Claude Code 里最重要的开场指令之一，它会扫描代码仓库并帮我们生成或更新 `CLAUDE.md` 文件。不用我们自己再去编写 `CLAUDE.md` 文件了，非常方便。
