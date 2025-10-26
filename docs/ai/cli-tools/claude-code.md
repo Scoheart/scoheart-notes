@@ -66,6 +66,33 @@ export ANTHROPIC_AUTH_TOKEN=your-anyrouter-api-key
 - 自建
 - ...
 
+## pricing
+
+### Claude model pricing (per million tokens, USD)
+
+| Model                 | Base Input $/MTok | Output $/MTok | 5-min cache write $/MTok | 1-hour cache write $/MTok | Cache read $/MTok |
+| --------------------- | ----------------: | ------------: | -----------------------: | ------------------------: | ----------------: |
+| Opus 4.1              |             15.00 |         75.00 |                    18.75 |                     30.00 |              1.50 |
+| Opus 4                |             15.00 |         75.00 |                    18.75 |                     30.00 |              1.50 |
+| Sonnet 4.5            |              3.00 |         15.00 |                     3.75 |                      6.00 |              0.30 |
+| Sonnet 4              |              3.00 |         15.00 |                     3.75 |                      6.00 |              0.30 |
+| Sonnet 3.7            |              3.00 |         15.00 |                     3.75 |                      6.00 |              0.30 |
+| Haiku 4.5             |              1.00 |          5.00 |                     1.25 |                      2.00 |              0.10 |
+| Haiku 3.5             |              0.80 |          4.00 |                     1.00 |                      1.60 |              0.08 |
+| Opus 3 _(deprecated)_ |             15.00 |         75.00 |                    18.75 |                     30.00 |              1.50 |
+| Haiku 3               |              0.25 |          1.25 |                     0.30 |                      0.50 |              0.03 |
+
+### Extras, batch & long-context pricing
+
+| Feature / Scenario                        | Price (USD)                                                                     | Notes                                                                                |
+| ----------------------------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| **Batch API** — Opus 4.1 / Opus 4         | Input **7.50** /MTok; Output **37.50** /MTok                                    | 50% off base rates                                                                   |
+| **Batch API** — Sonnet 4.5 / 4 / 3.7      | Input **1.50** /MTok; Output **7.50** /MTok                                     | 50% off base rates                                                                   |
+| **Batch API** — Haiku 4.5                 | Input **0.50** /MTok; Output **2.50** /MTok                                     | 50% off base rates                                                                   |
+| **Long context (1M ctx; Sonnet 4 & 4.5)** | ≤200K: Input **3** / Output **15**; >200K: Input **6** / Output **22.50** /MTok | Long-context rates trigger when **input > 200K tokens**; stacks with batch & caching |
+| **Web Search tool**                       | **$10 per 1,000 searches** + regular token costs                                | Failed searches not charged; fetched content still counts as tokens                  |
+| **Code Execution sandbox**                | **$0.05 per container-hour** (first **50 hours/day** free per org)              | Token usage billed at model rates                                                    |
+
 ## 使用指南
 
 ### CLAUDE.md
