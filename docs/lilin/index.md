@@ -15,7 +15,17 @@
 
 #### 词法
 
+它讲的是从 `字符流` 到 `记号（token` 这层的规则
+
 类似英文句子中的一个单词。例如，我们想要在代码中表达一个数字，我们可以使用 `1.1` 来表示，但是如果写了一个 `1.1.1` 这样的数字，那么这个数字就是不合法的，因为词法错误。
+
+- 标识符（identifier）
+- 关键字（keyword）
+- 字面量（literal）
+- 运算符（operator）
+- 分隔符/标点（punctuation/separator）
+- 注释（comment）
+- 空白与行终止（whitespace & line terminator）
 
 #### 语法
 
