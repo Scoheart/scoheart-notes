@@ -136,6 +136,20 @@ ECMAScript is the specification for JavaScript. All versions:
 
 例如，最常见的 JavaScript Runtime 是浏览器，对于浏览器而言，它给 JavaScript 提供了访问 Window 对象，操作 DOM 对象、发送 Ajax 请求等 Web APIs。Nodejs 给其中的 JavaScript 提供了访问文件系统、创建 TCP/UDP 服务器、发送 HTTP 请求等 Node APIs。
 
+```mermaid
+graph TB
+    subgraph Runtime["JavaScript Runtime"]
+        Engine["JavaScript Engine"]
+        APIs["APIs"]
+    end
+
+    style Runtime fill:#e1f5ff,stroke:#01579b,stroke-width:3px
+    style Engine fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    style APIs fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+```
+
+![alt](./image.png)
+
 | JavaScript Runtime |                  Built-in JavaScript Engines                   |                APIs                 |
 | :----------------: | :------------------------------------------------------------: | :---------------------------------: |
 |      Browser       | Chrome:V8 <br> Safari:JavaScriptCore <br> Firefox:SpiderMonkey |    Window、DOM、XMLHttpRequest……    |

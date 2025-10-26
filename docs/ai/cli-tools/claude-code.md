@@ -100,3 +100,7 @@ Slash Commands 是 Claude Code 提供的一种命令行交互方式。在交互�
 #### /init
 
 它是 Claude Code 里最重要的开场指令之一，它会扫描代码仓库并帮我们生成或更新 `CLAUDE.md` 文件。不用我们自己再去编写 `CLAUDE.md` 文件了，非常方便。
+
+#### /memory
+
+它可以帮助我们查看和编辑 Claude Code 的 `CLAUDE.md` 文件。或者，我们自己用任何编辑器直接打开 `CLAUDE.md` 文件进行编辑，这也是可以的。
