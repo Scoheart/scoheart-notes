@@ -4,7 +4,7 @@ mdn 解释了四种提升：
 
 1. HoistableDeclaration 中四种（FunctionDeclaration 等）
 2. var
-3. let const
+3. let const class
 4. import
 
 文档地址
