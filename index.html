@@ -1,14 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
+  </head>
 
-<body>
-    <script src="index.js"></script>
-</body>
+  <body>
+    <div>
+      <h1>Hello World</h1>
+    </div>
+    <script>
+      // ES5-compatible engine/version detection without modern syntax
+      function detectEngine() {
+        var ua = navigator.userAgent || '';
+        var data = navigator.userAgentData || null; // may be undefined on some browsers
+        var res = { engine: 'Unknown', version: 'Unknown', details: {} };
 
+        // Try UA-CH (User-Agent Client Hints) if available
+        if (data && data.brands && data.brands.length) {
+          // brands is an array of { brand: string, version: string }
+          var i, brand;
+          for (i = 0; i < data.brands.length; i++) {
+            brand = data.brands[i];
+            if (/Chromium/i.test(brand.brand) || /Google Chrome/i.test(brand.brand) || /Microsoft Edge/i.test(brand.brand)) {
+              res.engine = 'Chromium';
+              res.version = brand.version || 'Unknown';
+            }
+          }
+          if (res.engine === 'Chromium') {
+            var list = [];
+            for (i = 0; i < data.brands.length; i++) {
+              brand = data.brands[i];
+              list.push(brand.brand + ' ' + brand.version);
+            }
+            res.details.brands = list;
+            return res;
+          }
+        }
+
+        // Fallback: parse UA string
+        // Chromium desktop (Chrome/Chromium/Edge). iOS browsers use WebKit.
+        if (/(Chrome|Chromium|Edg)\//.test(ua) && /AppleWebKit\//.test(ua)) {
+          res.engine = 'Chromium';
+          var mChromium = ua.match(/(?:Chrome|Chromium|Edg)\/(\d+(?:\.\d+){0,3})/);
+          res.version = mChromium ? mChromium[1] : 'Unknown';
+          return res;
+        }
+
+        // Firefox / Gecko
+        if (/Firefox\/\d+/.test(ua)) {
+          res.engine = 'Gecko';
+          var mRv = ua.match(/rv:(\d+(?:\.\d+)?)/);
+          var mFf = ua.match(/Firefox\/(\d+(?:\.\d+)?)/);
+          res.version = (mRv && mRv[1]) || (mFf && mFf[1]) || 'Unknown';
+          return res;
+        }
+
+        // WebKit (Safari & iOS browsers)
+        if (/AppleWebKit\//.test(ua)) {
+          res.engine = 'WebKit';
+          var mWk = ua.match(/AppleWebKit\/(\d+(?:\.\d+)*)/);
+          res.version = mWk ? mWk[1] : 'Unknown';
+          return res;
+        }
+
+        return res;
+      }
+
+      // Avoid arrow functions and template literals for compatibility
+      document.addEventListener('DOMContentLoaded', function () {
+        var info = detectEngine();
+
+        var container = document.createElement('div');
+        container.id = 'engine-info';
+        container.style.fontFamily = 'system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif';
+        container.style.padding = '1rem';
+        container.style.lineHeight = '1.5';
+
+        var heading = document.createElement('h2');
+        heading.appendChild(document.createTextNode('Browser engine info'));
+        container.appendChild(heading);
+
+        var pre = document.createElement('pre');
+        pre.textContent = 'Engine: ' + info.engine + '\nVersion: ' + info.version;
+        container.appendChild(pre);
+
+        if (info.details.brands && info.details.brands.length) {
+          var brands = document.createElement('div');
+          brands.textContent = 'UA-CH brands: ' + info.details.brands.join(', ');
+          brands.style.marginTop = '0.5rem';
+          container.appendChild(brands);
+        }
+
+        var details = document.createElement('details');
+        var summary = document.createElement('summary');
+        summary.appendChild(document.createTextNode('Show raw userAgent'));
+        details.appendChild(summary);
+        var uaText = document.createElement('pre');
+        uaText.textContent = navigator.userAgent;
+        details.appendChild(uaText);
+        details.style.marginTop = '0.5rem';
+        container.appendChild(details);
+
+        document.body.insertBefore(container, document.body.firstChild);
+      });
+    </script>
+  </body>
 </html>
