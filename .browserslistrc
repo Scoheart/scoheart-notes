@@ -1,0 +1,25 @@
+# .browserslistrc —— 以 Android 5.0 时代为锚点的“同代下限”
+# —— 核心：Chromium ~37/38，WebKit ~Safari 8，Gecko ~Firefox 31/33
+
+# Chromium/Chrome 系
+chrome >= 38          # 同期桌面/Android Chrome 38（2014-10）
+and_chr >= 38         # Chrome for Android 38
+
+# Android WebView（Lollipop 初始为 Chromium 37）
+android >= 4.4.3      # AOSP/Android Browser 4.4.3+（Chromium-based，从 4.4 起）
+# 说明：Lollipop 的系统 WebView 起始为 Chromium 37；若你更保守，可把下面一条也加上：
+# chrome >= 37        # 兼顾与 WebView 37 更贴近的内核
+
+# Gecko 系
+firefox >= 33         # 或用 ESR：firefox >= 31
+
+# WebKit（Apple 系）
+safari >= 8
+ios_saf >= 8
+
+# Blink（Opera）
+opera >= 25           # Opera 25 基于 Chromium 38
+
+# 当时仍有残留的 IE/Edge 情况（看你的业务是否需要）
+ie >= 11
+edge >= 12
