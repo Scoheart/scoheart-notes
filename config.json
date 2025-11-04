@@ -1,0 +1,48 @@
+{
+  "LOG": true,
+  "LOG_LEVEL": "debug",
+  "CLAUDE_PATH": "",
+  "HOST": "127.0.0.1",
+  "PORT": 3456,
+  "APIKEY": "",
+  "API_TIMEOUT_MS": "600000",
+  "PROXY_URL": "",
+  "transformers": [
+    {
+      "path": "/Users/scoheart/.claude-code-router/plugins/amap.js"
+    }
+  ],
+  "Providers": [
+    {
+      "name": "Alibaba-aishop",
+      "api_base_url": "http://ai-shop.amap.com/open-base-api/chat/completions ",
+      "api_key": "iy6WmCgzfjHv3_uP8zGo",
+      "models": [
+        "[AiMap][qwen-max-latest]",
+        "[AiMap][qwen3-coder-plus]",
+        "[AiMap][gpt-5]",
+        "[AiMap][Claude-Sonnet-4.0-V1]"
+      ]
+    }
+  ],
+  "StatusLine": {
+    "enabled": true,
+    "currentStyle": "default",
+    "default": {
+      "modules": []
+    },
+    "powerline": {
+      "modules": []
+    }
+  },
+  "Router": {
+    "default": "Alibaba-aishop,[AiMap][gpt-5]",
+    "background": "Alibaba-aishop,[AiMap][gpt-5]",
+    "think": "Alibaba-aishop,[AiMap][gpt-5]",
+    "longContext": "Alibaba-aishop,[AiMap][gpt-5]",
+    "longContextThreshold": 1000000,
+    "webSearch": "Alibaba-aishop,[AiMap][gpt-5]",
+    "image": "Alibaba-aishop,[AiMap][gpt-5]"
+  },
+  "CUSTOM_ROUTER_PATH": ""
+}
