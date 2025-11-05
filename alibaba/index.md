@@ -283,9 +283,40 @@ Babel 的配置文件，`SHOULD` 遵循如下基本配置，`MAY` 根据项目�
 
 ### Bundler
 
+#### Vite
+
+项目的构建工具，`SHOULD` 使用 Vite。并且新项目 `MUST` 使用 Vite。
+
+- vite 版本
+
+vite 的版本 `MUST` 为下面表格中的版本：
+
+| Version |
+| ------- |
+| v4.5.3  |
+
+- vite config
+
+vite 的配置文件 `SHOULD` 添加如下所示的基本配置，`MAY` 根据项目实际情况进行调整。
+
+```js
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
+
+export default defineConfig({
+  plugins: [vue()],
+});
+```
+
+#### Webpack
+
 ## Front-End Framework
 
 ### Vue
+
+## Router
+
+## State Management
 
 ## Questions
 
