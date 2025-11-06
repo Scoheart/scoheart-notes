@@ -16,9 +16,9 @@
 
 ### Trunk-Based Development / Github Flow
 
-- MR
-- PR
-- CR
+- GitHub Pull Request
+- GitLab Merge Request
+- Google Change Request(AOSP)
 
 ### Repository Strategy
 
@@ -290,21 +290,59 @@ export { name as alias } from "./module.js";
 
 ## JavaScript Flavours
 
+本节定义项目采用的语言风格与类型检查策略：优先 TypeScript；在不使用 TS 的场景下，使用 JSDoc + tsc 提供等价的静态检查。所有变体 `MUST` 与 ESM 模块系统保持一致。
+
 ### TypeScript
 
-如果项目使用 TypeScript，则项目 root directory 下的 tsconfig.json，`SHOULD` 遵循如下基本配置，`MAY` 根据项目实际情况进行调整。
+- 规范要求
+
+  - `MUST` 使用严格类型检查（`strict: true`）与一致大小写（`forceConsistentCasingInFileNames: true`）。
+  - 应用项目 `MUST` 仅类型检查（`noEmit: true`），构建与打包交由工具链完成。
+  - 库项目 `MUST` 产出 `.d.ts` 类型声明，并明确输出目录与模块格式。
+  - 运行时 `MUST` 对齐最低能力：`target: "ES2020"`；浏览器项目 `MUST` 包含 `DOM` 库。
+  - 模块解析 `SHOULD` 使用 `NodeNext` 以支持 `exports`/`imports` 字段。
+
+- 基线 `tsconfig.json`（应用项目）
 
 ```json
 {
   "compilerOptions": {
-    "allowJs": true,
-    "checkJs": true,
-    "noEmit": true, // 只做检查，不生成输出
-    "strict": true, // 更严格的规则
+    "target": "ES2020",
+    "lib": ["ES2020", "DOM"],
+    "module": "ESNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "noEmit": true,
+    "isolatedModules": true,
+    "forceConsistentCasingInFileNames": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitOverride": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "skipLibCheck": true,
+    "types": []
+    // "baseUrl": ".",
+    // "paths": { "@/*": ["src/*"] }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+- 库项目配置（产出类型声明）
+
+```json
+{
+  "compilerOptions": {
     "target": "ES2020",
     "module": "ESNext",
     "moduleResolution": "NodeNext",
-    "types": [], // 按需添加：项目里常用到的类型声明
+    "strict": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "dist/types",
+    "composite": true,
+    "incremental": true,
     "skipLibCheck": true
   },
   "include": ["src/**/*"],
@@ -312,35 +350,125 @@ export { name as alias } from "./module.js";
 }
 ```
 
-### JSDoc
+- 结构化配置
 
-如果项目没有使用 TypeScript，则需要利用 TypeScript 的 tsc + JSDoc 来实现 JavaScript 代码的类型检查。
+  - `SHOULD` 拆分配置：`tsconfig.base.json`（通用）+ `tsconfig.app.json`（应用）+ `tsconfig.test.json`（测试）。
+  - 测试环境 `SHOULD` 对齐测试工具：例如 Vitest/Jest 的 `types` 与路径别名；Vue 项目使用 `vue-tsc` 做 SFC 类型检查。
 
-- 项目级
+- 运行环境
 
-项目 root directory 下的 tsconfig.json，`MUST` 遵循如下配置：
+  - 浏览器项目 `MUST` 设置 `lib: ["ES2020", "DOM"]`。
+  - Node 项目 `SHOULD` 根据最低 Node 版本选择合适 `lib`，采用 ESM 时 `MUST` 在 `package.json` 中设置 `type: "module"` 并与 `module: "ESNext"` 对齐。
+
+- JavaScript/TypeScript 混合仓库
+
+  - 仅在确有需要时 `MAY` 启用 `allowJs`/`checkJs`；纯 TS 项目 `SHOULD NOT` 启用以降低误报和编译开销。
+
+- 工具链对齐
+  - ESLint `SHOULD` 使用 `@typescript-eslint/parser` 并指向项目 `tsconfig.json`；与 Prettier 集成以统一风格。
+  - 路径别名 `MUST` 在打包器（Vite/Webpack）与测试工具（Vitest/Jest）中保持与 TS `paths` 一致的解析，避免运行时不一致。
+
+### JavaScript + JSDoc + tsc + `@/types/*.d.ts`
+
+- 未使用 TypeScript 的项目 `MUST` 通过 JSDoc + `tsc` 实现项目级类型检查；公共类型 `MUST` 手工维护于 `@/types/*.d.ts` 并作为单一可信源。
+
+
+- 文件级 `MUST` 使用 `@ts-check`；`MUST NOT` 使用 `@ts-nocheck`（除非有记录的豁免与到期日）。
+
+- 项目级 `tsconfig.json`
 
 ```json
 {
   "compilerOptions": {
     "allowJs": true,
     "checkJs": true,
-    "noEmit": true, // 只做检查，不生成输出
-    "strict": true, // 更严格的规则
+    "noEmit": true,
+    "strict": true,
     "target": "ES2020",
+    "lib": ["ES2020", "DOM"],
     "module": "ESNext",
     "moduleResolution": "NodeNext",
-    "types": [], // 按需添加：项目里常用到的类型声明
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "types": [],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@/types/*": ["types/*"]
+    }
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "types/**/*"],
   "exclude": ["node_modules", "dist"]
 }
 ```
 
-- 文件级
+- 类型模型目录（`@/types/*.d.ts`）
+  - 结构 `MUST`：所有公共类型集中在 `types/`（例如 `types/index.d.ts`、`types/env.d.ts`、`types/components.d.ts`）。
+  - 文件 `MUST` 为模块化声明（使用 `export`/`import`），避免全局污染；如需扩展全局，`MUST` 使用 `declare global` 并以 `export {}` 结尾。
+  - 按域拆分 `SHOULD`：大型项目按业务域拆分类型文件，并通过 `types/index.d.ts` 统一导出聚合。
 
-任何 JavaScript 文件或者相关代码，`MUST` 使用 @ts-check 注释，开启文件级类型检查。`MUST NOT` 使用 @ts-nocheck 注释。
+```ts
+// types/index.d.ts
+export interface User {
+  id: string;
+  active?: boolean;
+}
+export type Result<T> = { ok: true; data: T } | { ok: false; error: Error };
+
+declare global {
+  interface Window {
+    APP_VERSION: string;
+  }
+}
+export {};
+```
+
+```ts
+// types/env.d.ts
+export interface BuildMeta {
+  commit: string;
+  date: string;
+}
+```
+
+- JSDoc 用法（引用集中类型）
+
+```javascript
+// @ts-check
+
+/** @typedef {import('@/types').User} User */
+
+/**
+ * 根据用户激活状态生成标签
+ * @param {User} user
+ * @returns {string}
+ */
+export function label(user) {
+  return user.active === true ? `active:${user.id}` : `inactive:${user.id}`;
+}
+
+/**
+ * 列表计数（泛型）
+ * @template T
+ * @param {T[]} list
+ * @returns {number}
+ */
+export const count = (list) => list.length;
+```
+
+- 工具链与 CI
+
+  - `MUST` 在 CI 中运行：`tsc -p tsconfig.json --noEmit`，将类型检查作为质量门禁。
+  - ESLint `SHOULD` 使用 `eslint-plugin-jsdoc` 强化注释结构；并与 Prettier 集成统一风格。
+  - 路径别名 `MUST` 在打包器（Vite/Webpack）与测试工具（Vitest/Jest）中与 TS `paths` 对齐：示例 Vite `resolve.alias` 配置 `{"@": fileURLToPath(new URL('./src', import.meta.url))}`，并将 `@/types` 指向 `types/`。
+
+- 发布（库场景）
+
+  - 包元数据 `MUST` 声明 `"types": "./types/index.d.ts"`；多入口 `SHOULD` 在 `exports` 中为每个入口设置 `types` 与 `import` 的映射；`files` `MUST` 包含 `types/`。
+  - 类型聚合 `MAY` 使用 `rollup-plugin-dts` 或 `tsup --dts` 将 `types/` 打包到 `dist/types`，并保持 `exports` 映射一致。
+
+- 迁移建议与误区
+  - JS → TS 渐进迁移 `SHOULD`：先以集中 `@/types` 清理类型，再按模块逐步转换为 `.ts`；同时保持外部 `.d.ts` 发布策略稳定。
+  - `MUST NOT` 期待 `tsc` 从 `.js` 直接生成 `.d.ts`；`.d.ts` 需手工维护或经类型构建工具打包聚合。
 
 ## Package Manager
 
@@ -538,9 +666,19 @@ export default createPinia();
 
 ### Lodash
 
-### Network Request
+### Network
+
+#### HTTP Request
+
+#### HTTP Response
+
+### Log Monitor
+
+### DevTools
 
 ### Date
+
+### JS Bridge
 
 ###
 
