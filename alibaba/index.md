@@ -38,13 +38,9 @@ Monorepo 仓库的文件目录结构 `MUST` 遵循如下结构：
 └── README.md
 ```
 
-apps 目录下，`MUST` 存放的是应用程序，每个应用程序 `MUST` 有一个独立的 package.json 文件。
-
-packages 目录下，`MUST` 存放的是库，每个库 `MUST` 有一个独立的 package.json 文件。
-
-pnpm-workspace.yaml 文件，`MUST` 存放的是 pnpm 的工作空间配置文件。
-
-README.md 文件，`MUST` 存放的是仓库的 README 文件。
+- `apps/` 目录 **MUST** 仅存放应用，每个应用 **MUST** 具有独立的 `package.json`，且 `name` **MUST** 唯一。
+- `packages/` 目录 **MUST** 仅存放库，每个库 **MUST** 具有独立的 `package.json`，并 **SHOULD** 通过 `exports`/`types` 明确入口。
+- `pnpm-workspace.yaml` **MUST** 定义工作空间范围；`README.md` **MUST** 说明仓库结构、开发/发布流程与约定。
 
 ## CSS
 
@@ -146,11 +142,28 @@ CSS 代码示例（非法命名）：
 }
 ```
 
-### CSS Modules
+#### Maintainability
+
+- 选择器特指度 `MUST` 保持低；层级 `MUST NOT` 超过 **2**；
+- 选择器 `MUST NOT` 与标签或 ID 耦合提升特指度（例如 `ul.menu__item`、`#app .card`）。
+- 预处理器嵌套（SCSS/Less） `MUST NOT` 超过 **3** 层；如因第三方覆盖需要超限，`MUST` 在 PR 说明并添加注释。
+- `!important` `MUST NOT` 作为常规覆盖手段；若使用，`MUST` 在代码注释或 PR 中说明原因与替代方案不可行性。
+- 对会重置子属性的简写（如 `background`、`font`） `SHOULD NOT` 使用；确需使用时 `MUST` 确认无意外覆盖；`margin`/`padding`； `MAY` 使用简写以提升可读性。
+
+### CSS Modularization
+
+#### CSS Moduels
 
 #### Vue scoped
 
-Vue 的项目，通过 `<style scoped>` 标签包裹 CSS 代码，
+- 单文件组件中的 `<style scoped>` `MUST` 用于轻量按组件隔离样式；其生成的选择器属性（例如 data-v-xxxx）`MUST NOT` 作为业务逻辑或测试选择器依赖。
+- 同一组件的主要样式隔离策略 `MUST` 二选一：CSS Modules 或 scoped；二者在同一组件中混用 `MUST NOT` 成为常态（仅可用于少量、明确的例外）。
+- 父组件需要影响子组件内部结构时 `MUST` 使用 `:deep(...)`；无界限的后代选择（如 `.parent .child .grandchild`）`MUST NOT` 取代 `:deep`。
+- 插槽内容样式 `SHOULD` 使用 `:slotted(...)` 进行定向作用；对未命名插槽进行全量覆盖 `SHOULD NOT` 采用宽泛的 `*` 选择器。
+- 全局 Reset、主题变量与版式基线 `MUST` 存放于非 scoped 的全局样式或分层样式（如 `@layer base`）；在 scoped 块中实现 Reset `MUST NOT` 期望影响组件外部。
+- 需要跨组件共享的动画与关键帧命名 `SHOULD` 统一前缀或置于全局层；在 scoped 中定义的关键帧是否被重写取决于构建配置，名称冲突 `MUST NOT` 发生。
+- 深度选择器与全局出口 `MUST` 精确到必要范围；广义的 `:deep(_)` 或 `:global(_)` `MUST NOT` 使用。
+- 为了主题与可维护性，颜色与间距 `SHOULD` 使用 CSS 自定义属性；覆盖主题时 `MUST` 通过变量或修饰符类完成，而非在 scoped 中复制粘贴整段规则。
 
 ### CSS Framework
 
@@ -163,6 +176,11 @@ Less 的版本 `MUST` 为下面表格中的版本：
 | Version |
 | ------- |
 | v4.0.0  |
+
+- 设计与主题相关的值 `MUST` 抽象为 Less 变量；变量命名 `SHOULD` 使用 `kebab-case` 与语义化前缀（例如 `@color-brand`、`@space-2`）。
+- 「魔法值」`MUST NOT` 直接硬编码；如存在历史遗留，`MUST` 追加注释说明来源与影响面。
+- 常用模式（圆角、阴影、断点容器等）`SHOULD` 封装为参数化 mixin；mixin `SHOULD NOT` 形成深层依赖链（> 2 层）。
+- 需要运行时切换的主题/品牌色 `SHOULD` 以 CSS 自定义属性（变量）输出，Less 仅负责生成默认值或派生计算。
 
 ## JavaScript Engine & Runtime
 
