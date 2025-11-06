@@ -26,6 +26,52 @@
 
 #### Monorepo
 
+Monorepo 仓库，使用 pnpm 来进行依赖包的管理，使用 pnpm workspace 来管理 packages。
+
+Monorepo 仓库的文件目录结构 `MUST` 遵循如下结构：
+
+```
+.
+├── apps
+├── packages
+├── pnpm-workspace.yaml
+└── README.md
+```
+
+apps 目录下，`MUST` 存放的是应用程序，每个应用程序 `MUST` 有一个独立的 package.json 文件。
+
+packages 目录下，`MUST` 存放的是库，每个库 `MUST` 有一个独立的 package.json 文件。
+
+pnpm-workspace.yaml 文件，`MUST` 存放的是 pnpm 的工作空间配置文件。
+
+README.md 文件，`MUST` 存放的是仓库的 README 文件。
+
+## CSS
+
+### naming convention
+
+项目中的 CSS 代码，`MUST` 使用 BEM（Block, Element, Modifier）规范。
+
+详细的 CSS 代码, `MUST` 遵循 BEM 规范，则 CSS 代码的命名规则为：`<block>__<element>--<modifier>`
+
+#### CSS Modules
+
+##### Vue scoped
+
+Vue 的项目，通过 `<style scoped>` 标签包裹 CSS 代码，
+
+### Framework
+
+#### Less
+
+项目中的 CSS 代码，`MUST` 使用 Less 预处理器。
+
+Less 的版本 `MUST` 为下面表格中的版本：
+
+| Version |
+| ------- |
+| v4.0.0  |
+
 ## JavaScript Engine & Runtime
 
 ### Development Environment 开发环境
@@ -378,6 +424,10 @@ export default createPinia();
 
 ## Ecosystem / Libraries
 
+### Vant
+
+###
+
 ## Questions
 
 Q1: 需要支持的最低的浏览器版本是多少？
@@ -386,26 +436,5 @@ A：暂时不确定，可以通过给 SLS 添加特定的打点，来确定用�
 
 ## Appendix
 
-| Edition       | Year | Official name            | Major language features (high level)                                                                                                                                                                                                                                                                                                                                                                  |     |     |
-| ------------- | ---: | ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- | --- |
-| ES1           | 1997 | ECMAScript 1st Edition   | Initial standardization of the language (based on JavaScript 1.1).                                                                                                                                                                                                                                                                                                                                    |     |     |
-| ES2           | 1998 | ECMAScript 2nd Edition   | Editorial alignment with ISO/IEC 16262; no new language features.                                                                                                                                                                                                                                                                                                                                     |     |     |
-| ES3           | 1999 | ECMAScript 3rd Edition   | Regular expressions<br>Improved string handling<br>New control statements<br>try/catch<br>Clearer error semantics<br>Numeric formatting                                                                                                                                                                                                                                                               |     |     |
-| — (ES4)       |    — | ECMAScript 4 (abandoned) | Abandoned; many ideas later resurfaced in ES2015+.                                                                                                                                                                                                                                                                                                                                                    |     |     |
-| ES5           | 2009 | ECMAScript 5th Edition   | Strict mode<br>JSON<br>Getters/setters<br>Property descriptors (Object.defineProperty / Object.defineProperties)<br>Object.create<br>Object.freeze / Object.seal / Object.preventExtensions<br>Array extras: forEach, map, filter, reduce, reduceRight, some, every, indexOf, lastIndexOf<br>Function.prototype.bind                                                                                  |     |     |
-| ES5.1         | 2011 | ECMAScript 5.1 Edition   | Editorial / ISO alignment; no new language features.                                                                                                                                                                                                                                                                                                                                                  |     |     |
-| ES2015 (ES6)  | 2015 | ECMAScript 2015 (6th)    | let / const<br>Arrow functions<br>Classes<br>Modules (import / export)<br>Template literals<br>Destructuring<br>Default parameters<br>Rest parameters<br>Spread syntax<br>Iterators & for...of<br>Generators<br>Promises<br>Map / Set / WeakMap / WeakSet<br>Symbol<br>Proxy & Reflect<br>Typed arrays<br>New Math/Number/String/Array/Object APIs<br>Binary & octal literals<br>Unicode improvements |     |     |
-| ES2016 (ES7)  | 2016 | ECMAScript 2016 (7th)    | Exponentiation operator \*\*<br>Array.prototype.includes                                                                                                                                                                                                                                                                                                                                              |     |     |
-| ES2017 (ES8)  | 2017 | ECMAScript 2017 (8th)    | async / await<br>SharedArrayBuffer & Atomics<br>Object.values / Object.entries<br>Object.getOwnPropertyDescriptors<br>String.prototype.padStart / padEnd<br>Trailing commas in parameter lists                                                                                                                                                                                                        |     |     |
-| ES2018 (ES9)  | 2018 | ECMAScript 2018 (9th)    | Object rest properties<br>Object spread properties<br>Asynchronous iteration (for await...of)<br>Promise.prototype.finally<br>RegExp: dotAll (/s), named capture groups, lookbehind, Unicode property escapes<br>Template literal revision                                                                                                                                                            |     |     |
-| ES2019 (ES10) | 2019 | ECMAScript 2019 (10th)   | Array.prototype.flat<br>Array.prototype.flatMap<br>Object.fromEntries<br>Optional catch binding<br>Stable Array.prototype.sort<br>String.prototype.trimStart / trimEnd<br>Symbol.prototype.description<br>JSON superset of string literals                                                                                                                                                            |     |     |
-| ES2020 (ES11) | 2020 | ECMAScript 2020 (11th)   | BigInt<br>Nullish coalescing ??<br>Optional chaining ?.<br>Dynamic import()<br>import.meta<br>Promise.allSettled<br>globalThis<br>export \* as ns syntax<br>String.prototype.matchAll                                                                                                                                                                                                                 |     |     |
-| ES2021 (ES12) | 2021 | ECMAScript 2021 (12th)   | String.prototype.replaceAll<br>Promise.any & AggregateError<br>Logical assignment (&&=, =, ??=)<br>WeakRef & FinalizationRegistry<br>Numeric separators (1_000_000)                                                                                                                                                                                                                                   |     |     |
-| ES2022 (ES13) | 2022 | ECMAScript 2022 (13th)   | Top-level await<br>Class fields (public/private)<br>Private methods & accessors<br>Static initialization blocks<br>#x in obj (private-field checks)<br>RegExp match indices (/d)<br>Error cause (new Error(msg, { cause }))<br>.at() on String / Array / TypedArray<br>Object.hasOwn                                                                                                                  |     |     |
-| ES2023 (ES14) | 2023 | ECMAScript 2023 (14th)   | Change-by-copy on arrays & typed arrays: toSorted, toReversed, toSpliced, with<br>findLast / findLastIndex<br>Hashbang grammar (#!)                                                                                                                                                                                                                                                                   |     |     |
-| ES2024 (ES15) | 2024 | ECMAScript 2024 (15th)   | Object.groupBy / Map.groupBy<br>Promise.withResolvers<br>RegExp /v flag (set notation & properties)<br>Resizable/transferable ArrayBuffer & SharedArrayBuffer<br>Atomics.waitAsync                                                                                                                                                                                                                    |     |     |
-| ES2025 (ES16) | 2025 | ECMAScript 2025 (16th)   | Iterator helpers (new global Iterator with static & prototype methods: Iterator.from, fromAsync, map, filter, take, drop, toArray, …)<br>JSON modules & import attributes<br>RegExp.escape & inline regex flag enable/disable<br>Promise.try<br>Float16Array + DataView.getFloat16 / setFloat16 + Math.f16round                                                                                       |     |     |
-
-
 1. Proxy/Rflect 无法 Polyfill
-2. 
+2.
