@@ -1,0 +1,32 @@
+# model = "gpt-5-codex"
+model = "[AiMap][gpt-5]"
+model_reasoning_effort = "high"
+
+model_provider = "gaode"
+preferred_auth_method = "apikey"
+
+[model_providers.gaode]
+name = "Gaode"
+base_url = "http://localhost:11888/v1"
+wire_api = "chat"
+
+[projects."/Users/scoheart/Code/vue/mcp-server-demo1"]
+trust_level = "trusted"
+
+[projects."/Users/scoheart/Code/alibaba/h5/h5-driver-servicescore"]
+trust_level = "trusted"
+
+[projects."/Users/scoheart/Code/vue/demo1"]
+trust_level = "trusted"
+
+[projects."/Users/scoheart/Code/notes"]
+trust_level = "trusted"
+
+[projects."/Users/scoheart/Code/notes/test-gemini"]
+trust_level = "trusted"
+
+[projects."/Users/scoheart/Code/ssg"]
+trust_level = "trusted"
+
+
+iy6WmCgzfjHv3_uP8zGo
