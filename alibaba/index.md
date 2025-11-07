@@ -4,29 +4,48 @@
 
 ### Git
 
-所有的源代码都 `MUST` 通过 Git 进行管理。
+所有的源代码 `MUST` 通过 Git 进行管理，并遵循如下约定：
 
-### Gitlab
+- 仓库默认分支 `MUST` 为 `main`；如需不同命名，`MUST` 在仓库 `README.md` 中说明理由与迁移策略。
+- `main` 与发布分支 `MUST` 启用保护（禁止直接推送、禁止强制推送）；合入 `MUST` 通过受控流程完成。
+- 提交历史 `SHOULD` 保持线性；合入策略 `SHOULD` 采用 “Squash” 或 “Rebase + Merge”。
+- 提交信息 `SHOULD` 结构化且清晰（建议遵循 Conventional Commits）；至少 `MUST` 说明变更目的与影响范围。
+- 大型二进制文件 `MUST` 使用 Git LFS 或制品库管理；源码仓库 `MUST NOT` 存放未经管理的二进制制品。
 
-所有的源代码仓库都 `MUST` 托管在企业私有部署的 Gitlab 上。
+### GitLab
 
-网约车 & 代驾 项目 Gitlab 私服地址：`https://gitlab.bailongma-inc.com/`
+所有的源代码仓库 `MUST` 托管在企业私有部署的 GitLab 上，且项目可见性 `MUST` 为私有；访问控制 `MUST` 使用最小权限原则。
 
-巡改网（出租车）& 趣接单（极速版｜兼职）& 火箭出行 项目 Gitlab 私服地址：`http://gitlab-qx.bailongma-inc.com/`
+| Project                                            | GitLab 私服地址                     |
+| -------------------------------------------------- | ----------------------------------- |
+| 网约车 & 代驾                                      | https://gitlab.bailongma-inc.com/   |
+| 巡改网（出租车）& 趣接单（极速版｜兼职）& 火箭出行 | http://gitlab-qx.bailongma-inc.com/ |
 
-### Trunk-Based Development / Github Flow
+### Trunk-Based Development / GitHub Flow
 
-- GitHub Pull Request
-- GitLab Merge Request
-- Google Change Request(AOSP)
+团队 `MAY` 选择 Trunk-Based Development 或 GitHub Flow；无论采用何种流程，变更集成 `MUST` 遵循：
+
+- 变更 `MUST` 在短生命周期功能分支进行；分支命名 `SHOULD` 使用前缀（例如 `feature/*`、`bugfix/*`、`hotfix/*`）。
+- 合入 `MUST` 通过 Pull/Merge Request 完成，且至少 1 名 Reviewer `MUST` 审核通过。
+- 所有 Request `MUST` 通过 CI；流水线失败的变更 `MUST NOT` 合入主干。
+- 直接推送至 `main`/受保护分支 `MUST NOT` 发生；紧急情况 `MAY` 由维护者在受控流程下执行并记录。
+- Hotfix 分支 `MUST` 从最新主干或发布分支切出，合入后 `MUST` 回合并（cherry-pick 或同步）到相关分支。
+
+可用的变更通道：GitHub Pull Request / GitLab Merge Request / Google Change Request (AOSP)。
 
 ### Repository Strategy
 
-#### polyrepo
+#### Polyrepo
+
+Polyrepo 适用于边界清晰、低耦合的应用或库，仓库边界与发布方式 `MUST` 明确：
+
+- 跨仓库依赖 `MUST` 通过包管理器进行版本化发布；直接嵌入子模块或路径依赖 `SHOULD NOT` 作为常态方案。
+- 公共库 `MUST` 发布到内部包仓库（如企业 npm Registry）；应用 `MUST NOT` 直接引用未发布的私有源文件。
+- 版本发布与变更日志 `MUST` 在各自仓库独立维护，确保可追溯性。
 
 #### Monorepo
 
-Monorepo 仓库，使用 pnpm 来进行依赖包的管理，使用 pnpm workspace 来管理 packages。
+Monorepo 仓库 `MUST` 使用 pnpm 管理依赖，并 `MUST` 使用 pnpm workspace 管理 packages。
 
 Monorepo 仓库的文件目录结构 `MUST` 遵循如下结构：
 
@@ -294,15 +313,14 @@ export { name as alias } from "./module.js";
 
 ### TypeScript
 
-- 规范要求
+- `MUST` 使用严格类型检查（`strict: true`）
+- `MUST` 开启强制文件名大小写一致性（`forceConsistentCasingInFileNames: true`）。
+- 应用项目 `MUST` 仅类型检查（`noEmit: true`），构建与打包交由工具链完成。
+- 库项目 `MUST` 产出 `.d.ts` 类型声明，并明确输出目录与模块格式。
+- 运行时 `MUST` 对齐最低能力：`target: "ES2020"`；浏览器项目 `MUST` 包含 `DOM` 库。
+- 模块解析 `SHOULD` 使用 `NodeNext` 以支持 `exports`/`imports` 字段。
 
-  - `MUST` 使用严格类型检查（`strict: true`）与一致大小写（`forceConsistentCasingInFileNames: true`）。
-  - 应用项目 `MUST` 仅类型检查（`noEmit: true`），构建与打包交由工具链完成。
-  - 库项目 `MUST` 产出 `.d.ts` 类型声明，并明确输出目录与模块格式。
-  - 运行时 `MUST` 对齐最低能力：`target: "ES2020"`；浏览器项目 `MUST` 包含 `DOM` 库。
-  - 模块解析 `SHOULD` 使用 `NodeNext` 以支持 `exports`/`imports` 字段。
-
-- 基线 `tsconfig.json`（应用项目）
+#### tsconfig.json - 应用项目
 
 ```json
 {
@@ -329,7 +347,7 @@ export { name as alias } from "./module.js";
 }
 ```
 
-- 库项目配置（产出类型声明）
+#### tsconfig.json - 库项目
 
 ```json
 {
@@ -350,31 +368,22 @@ export { name as alias } from "./module.js";
 }
 ```
 
-- 结构化配置
+#### tsconfig.json - 结构化配置
 
-  - `SHOULD` 拆分配置：`tsconfig.base.json`（通用）+ `tsconfig.app.json`（应用）+ `tsconfig.test.json`（测试）。
-  - 测试环境 `SHOULD` 对齐测试工具：例如 Vitest/Jest 的 `types` 与路径别名；Vue 项目使用 `vue-tsc` 做 SFC 类型检查。
-
-- 运行环境
-
-  - 浏览器项目 `MUST` 设置 `lib: ["ES2020", "DOM"]`。
-  - Node 项目 `SHOULD` 根据最低 Node 版本选择合适 `lib`，采用 ESM 时 `MUST` 在 `package.json` 中设置 `type: "module"` 并与 `module: "ESNext"` 对齐。
-
-- JavaScript/TypeScript 混合仓库
-
-  - 仅在确有需要时 `MAY` 启用 `allowJs`/`checkJs`；纯 TS 项目 `SHOULD NOT` 启用以降低误报和编译开销。
-
-- 工具链对齐
-  - ESLint `SHOULD` 使用 `@typescript-eslint/parser` 并指向项目 `tsconfig.json`；与 Prettier 集成以统一风格。
-  - 路径别名 `MUST` 在打包器（Vite/Webpack）与测试工具（Vitest/Jest）中保持与 TS `paths` 一致的解析，避免运行时不一致。
+- `SHOULD` 拆分配置：`tsconfig.base.json`（通用）+ `tsconfig.app.json`（应用）+ `tsconfig.test.json`（测试）。
+- 测试环境 `SHOULD` 对齐测试工具：例如 Vitest/Jest 的 `types` 与路径别名；Vue 项目使用 `vue-tsc` 做 SFC 类型检查。
 
 ### JavaScript + JSDoc + tsc + `@/types/*.d.ts`
 
-- 未使用 TypeScript 的项目 `MUST` 通过 JSDoc + `tsc` 实现项目级类型检查；公共类型 `MUST` 手工维护于 `@/types/*.d.ts` 并作为单一可信源。
+未使用 TypeScript 的项目 `MUST` 通过 JSDoc + `tsc` 实现项目级类型检查；公共类型 `MUST` 手工维护于 `@/types/*.d.ts` 并作为单一可信源。
 
-- 文件级 `MUST` 使用 `@ts-check`；`MUST NOT` 使用 `@ts-nocheck`（除非有记录的豁免与到期日）。
+#### 文件级类型检查
 
-- 项目级 `tsconfig.json`
+文件级类型检查 `MUST` 使用 `@ts-check`；`MUST NOT` 使用 `@ts-nocheck`（除非有记录的豁免与到期日）。
+
+#### 项目级类型检查
+
+项目级类型检查 `MUST` 使用 `tsconfig.json` 配置文件。
 
 ```json
 {
@@ -400,10 +409,11 @@ export { name as alias } from "./module.js";
 }
 ```
 
-- 类型模型目录（`@/types/*.d.ts`）
-  - 结构 `MUST`：所有公共类型集中在 `types/`（例如 `types/index.d.ts`、`types/env.d.ts`、`types/components.d.ts`）。
-  - 文件 `MUST` 为模块化声明（使用 `export`/`import`），避免全局污染；如需扩展全局，`MUST` 使用 `declare global` 并以 `export {}` 结尾。
-  - 按域拆分 `SHOULD`：大型项目按业务域拆分类型文件，并通过 `types/index.d.ts` 统一导出聚合。
+#### 类型模型目录（`@/types/*.d.ts`）
+
+- 所有公共类型 `MUST` 集中在 `types/`（例如 `types/index.d.ts`、`types/env.d.ts`、`types/components.d.ts`）。
+- 文件 `MUST` 为模块化声明（使用 `export`/`import`），避免全局污染；如需扩展全局，`MUST` 使用 `declare global` 并以 `export {}` 结尾。
+- 大型项目 `SHOULD` 按业务域拆分类型文件，并通过 `types/index.d.ts` 统一导出聚合。
 
 ```ts
 // types/index.d.ts
@@ -429,7 +439,7 @@ export interface BuildMeta {
 }
 ```
 
-- JSDoc 用法（引用集中类型）
+#### JSDoc 用法
 
 ```javascript
 // @ts-check
@@ -453,21 +463,6 @@ export function label(user) {
  */
 export const count = (list) => list.length;
 ```
-
-- 工具链与 CI
-
-  - `MUST` 在 CI 中运行：`tsc -p tsconfig.json --noEmit`，将类型检查作为质量门禁。
-  - ESLint `SHOULD` 使用 `eslint-plugin-jsdoc` 强化注释结构；并与 Prettier 集成统一风格。
-  - 路径别名 `MUST` 在打包器（Vite/Webpack）与测试工具（Vitest/Jest）中与 TS `paths` 对齐：示例 Vite `resolve.alias` 配置 `{"@": fileURLToPath(new URL('./src', import.meta.url))}`，并将 `@/types` 指向 `types/`。
-
-- 发布（库场景）
-
-  - 包元数据 `MUST` 声明 `"types": "./types/index.d.ts"`；多入口 `SHOULD` 在 `exports` 中为每个入口设置 `types` 与 `import` 的映射；`files` `MUST` 包含 `types/`。
-  - 类型聚合 `MAY` 使用 `rollup-plugin-dts` 或 `tsup --dts` 将 `types/` 打包到 `dist/types`，并保持 `exports` 映射一致。
-
-- 迁移建议与误区
-  - JS → TS 渐进迁移 `SHOULD`：先以集中 `@/types` 清理类型，再按模块逐步转换为 `.ts`；同时保持外部 `.d.ts` 发布策略稳定。
-  - `MUST NOT` 期待 `tsc` 从 `.js` 直接生成 `.d.ts`；`.d.ts` 需手工维护或经类型构建工具打包聚合。
 
 ## Package Manager
 
@@ -526,11 +521,14 @@ resolve-peers-from-workspace-root=false
 
 ## Build Toolchains
 
-### Linters
+### Overview
 
-项目代码，`MUST` 利用格式化工具来保证代码的格式化，且格式化工具 `SHOULD` 使用 Prettier。
+构建工具链 `MUST` 至少包含以下组件：Formatter、Linter、Compiler/Transpiler、Bundler 与 CI 强制策略。各组件 `MUST` 与项目的浏览器兼容策略（见 `.browserslistrc`）与语言/框架选择（Vue 2、Less）保持一致。
 
-Prettier 的配置文件，`SHOULD` 遵循如下基本配置，`MAY` 根据项目实际情况进行调整。
+### Formatters
+
+- 代码格式化 `MUST` 使用 Prettier，并在 CI 中 `MUST` 以只读模式校验（`prettier --check .`）。
+- 基线配置 `SHOULD` 如下；项目可根据需要 `MAY` 细化，但 `MUST NOT` 引入不一致的风格于同一仓库。
 
 ```json
 {
@@ -546,25 +544,53 @@ Prettier 的配置文件，`SHOULD` 遵循如下基本配置，`MAY` 根据项�
 }
 ```
 
-项目代码，`MUST` 利用质量检查工具来保证代码的质量，且质量检查工具 `SHOULD` 使用 ESLint。
+### Linters
 
-ESLint 的配置文件，`SHOULD` 遵循如下基本配置，`MAY` 根据项目实际情况进行调整。
+- JavaScript/TypeScript 代码质量检查 `MUST` 使用 ESLint，并与 Prettier `MUST` 集成以消除风格冲突。
+- Vue 2 项目 `MUST` 启用 `eslint-plugin-vue` 的推荐规则集；环境与解析器选项 `MUST` 明确。
+- CI 中 `MUST` 执行 `eslint .` 并且不得有错误；警告 `SHOULD` 控制在团队约定阈值之内。
+
+示例基线（可按项目 `MAY` 调整）：
 
 ```json
 {
-  "extends": ["eslint:recommended", "plugin:prettier/recommended"]
+  "env": { "browser": true, "es6": true, "node": true },
+  "extends": [
+    "eslint:recommended",
+    "plugin:vue/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "parserOptions": { "ecmaVersion": 2020, "sourceType": "module" },
+  "rules": {}
 }
 ```
 
+- 样式代码检查 `SHOULD` 使用 Stylelint，并 `SHOULD` 采用 `stylelint-config-standard` 与 `stylelint-config-recess-order`；与 CSS 章节的属性顺序规范保持一致。
+
 ### Compiler/Transpiler
 
-项目代码，`MUST` 利用编译/转译工具来保证代码的兼容性，且编译/转译工具 `SHOULD` 使用 Babel 或者 SWC。
+- 代码兼容性 `MUST` 通过编译/转译实现；工具 `MAY` 在 Babel 与 SWC 中选用其一，但同一项目 `MUST` 统一。
+- 目标环境 `MUST` 以 `.browserslistrc` 的 `[production]` 为准；polyfill 策略 `SHOULD` 采用“按需注入”。
 
-Babel 的配置文件，`SHOULD` 遵循如下基本配置，`MAY` 根据项目实际情况进行调整。
+Babel 基线示例：
 
 ```json
 {
-  "presets": ["@babel/preset-env"]
+  "presets": [
+    [
+      "@babel/preset-env",
+      { "useBuiltIns": "usage", "corejs": 3 }
+    ]
+  ]
+}
+```
+
+SWC 基线示例：
+
+```json
+{
+  "jsc": { "target": "es2019" },
+  "env": { "targets": "defaults" }
 }
 ```
 
@@ -572,30 +598,63 @@ Babel 的配置文件，`SHOULD` 遵循如下基本配置，`MAY` 根据项目�
 
 #### Vite
 
-项目的构建工具，`SHOULD` 使用 Vite。并且新项目 `MUST` 使用 Vite。
-
-- vite 版本
-
-vite 的版本 `MUST` 为下面表格中的版本：
+- 新项目 `MUST` 使用 Vite；现有项目 `SHOULD` 迁移至 Vite 于合适窗口。
+- Vite 版本 `MUST` 固定为：
 
 | Version |
 | ------- |
 | v4.5.3  |
 
-- vite config
-
-vite 的配置文件 `SHOULD` 添加如下所示的基本配置，`MAY` 根据项目实际情况进行调整。
+- 配置 `SHOULD` 至少包含 Vue 插件与与兼容性相关的 Legacy 插件；Less 预处理 `MUST` 正确接入。
 
 ```js
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
+import legacy from "@vitejs/plugin-legacy";
 
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [
+    vue(),
+    legacy({
+      // 与 .browserslistrc 保持一致
+      targets: [
+        "chrome >= 38",
+        "firefox >= 32",
+        "safari >= 8",
+        "edge >= 12"
+      ],
+    }),
+  ],
+  css: {
+    preprocessorOptions: {
+      less: { javascriptEnabled: true }
+    }
+  }
 });
 ```
 
 #### Webpack
+
+- 既有项目 `MAY` 保留 Webpack；新项目 `SHOULD NOT` 引入 Webpack，除非有明确技术约束并记录。
+- Vue 2 与 Less 的最小可用配置 `SHOULD` 如下（版本与 loader `MUST` 与依赖匹配）：
+
+```js
+module.exports = {
+  module: {
+    rules: [
+      { test: /\.vue$/, loader: "vue-loader" },
+      {
+        test: /\.[jt]sx?$/,
+        use: { loader: "babel-loader" }
+      },
+      {
+        test: /\.less$/,
+        use: ["style-loader", "css-loader", "less-loader"]
+      }
+    ]
+  }
+};
+```
 
 ## Front-End Framework
 
@@ -665,7 +724,7 @@ export default createPinia();
 
 ## Ecosystem / Libraries / Utils
 
-### Vant
+### blm-ui
 
 ### Lodash
 
@@ -695,3 +754,7 @@ A：暂时不确定，可以通过给 SLS 添加特定的打点，来确定用�
 
 1. Proxy/Rflect 无法 Polyfill
 2.
+
+## Appendix
+
+### XMind-style Logic Map (Mermaid mindmap)
