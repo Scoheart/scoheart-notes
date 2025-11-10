@@ -61,6 +61,8 @@ Monorepo 仓库的文件目录结构 `MUST` 遵循如下结构：
 - `packages/` 目录 **MUST** 仅存放库，每个库 **MUST** 具有独立的 `package.json`，并 **SHOULD** 通过 `exports`/`types` 明确入口。
 - `pnpm-workspace.yaml` **MUST** 定义工作空间范围；`README.md` **MUST** 说明仓库结构、开发/发布流程与约定。
 
+## HTML
+
 ## CSS
 
 ### CSS Coding Style
@@ -576,12 +578,7 @@ Babel 基线示例：
 
 ```json
 {
-  "presets": [
-    [
-      "@babel/preset-env",
-      { "useBuiltIns": "usage", "corejs": 3 }
-    ]
-  ]
+  "presets": [["@babel/preset-env", { "useBuiltIns": "usage", "corejs": 3 }]]
 }
 ```
 
@@ -617,19 +614,14 @@ export default defineConfig({
     vue(),
     legacy({
       // 与 .browserslistrc 保持一致
-      targets: [
-        "chrome >= 38",
-        "firefox >= 32",
-        "safari >= 8",
-        "edge >= 12"
-      ],
+      targets: ["chrome >= 38", "firefox >= 32", "safari >= 8", "edge >= 12"],
     }),
   ],
   css: {
     preprocessorOptions: {
-      less: { javascriptEnabled: true }
-    }
-  }
+      less: { javascriptEnabled: true },
+    },
+  },
 });
 ```
 
@@ -645,30 +637,30 @@ module.exports = {
       { test: /\.vue$/, loader: "vue-loader" },
       {
         test: /\.[jt]sx?$/,
-        use: { loader: "babel-loader" }
+        use: { loader: "babel-loader" },
       },
       {
         test: /\.less$/,
-        use: ["style-loader", "css-loader", "less-loader"]
-      }
-    ]
-  }
+        use: ["style-loader", "css-loader", "less-loader"],
+      },
+    ],
+  },
 };
 ```
 
 ## Front-End Framework
 
-### Vue
+### Vue 2
 
-项目中的 Vue 框架，`MUST` 使用 Vue 2。
-
-Vue 2 的版本 `MUST` 为下面表格中的版本：
+- 框架选择 `MUST` 为 Vue 2；版本 `MUST` 固定为：
 
 | Version |
 | ------- |
 | v2.7.16 |
 
-Vue 2 的配置文件 `SHOULD` 添加如下所示的基本配置，`MAY` 根据项目实际情况进行调整。
+- 入口文件 `MUST` 最小化且显式启用生产提示关闭；运行时构建与模板编译的选择 `MUST` 与构建工具一致（Vite/webpack）。
+
+示例入口：
 
 ```js
 import Vue from "vue";
@@ -681,17 +673,52 @@ new Vue({
 }).$mount("#app");
 ```
 
+- 单文件组件 `MUST` 使用 `<script>`（或 `<script lang=ts>` 在 TS 项目中）；样式隔离策略 `MUST` 与 CSS 章节保持一致（scoped 或 CSS Modules 二选一）。
+- 插件注册与全局资源（组件/指令/过滤器） `SHOULD` 在独立模块集中管理；避免在多处重复注册导致行为不一致。
+- 构建产物 `MUST` 遵循浏览器兼容策略；必要时 `SHOULD` 使用 `@vitejs/plugin-legacy` 或 Babel 以满足低版本需求。
+
+### Vue Style Guide
+
+#### `MUST` Use multi-word component names
+
+User component names should always be multi-word, except for root App components. This prevents conflicts with existing and future HTML elements, since all HTML elements are a single word.
+
+Bad Case:
+
+```vue
+<!-- in pre-compiled templates -->
+<Item />
+
+<!-- in in-DOM templates -->
+<item></item>
+```
+
+Good Case:
+
+```vue
+<!-- in pre-compiled templates -->
+<TodoItem />
+
+<!-- in in-DOM templates -->
+<todo-item></todo-item>
+```
+
+#### `MUST` Use detailed prop definitions
+
+####
+
 ## Router
 
-项目中的路由管理工具，`MUST` 使用 Vue Router。
-
-Vue Router 的版本 `MUST` 为下面表格中的版本：
+项目路由 `MUST` 使用 Vue Router 3；版本 `MUST` 固定为：
 
 | Version |
 | ------- |
 | v3.6.5  |
 
-Vue Router 的配置文件 `SHOULD` 添加如下所示的基本配置，`MAY` 根据项目实际情况进行调整。
+- 路由模式选择（`hash` / `history`）`MUST` 明确；`history` 模式 `MUST` 配合服务端重写规则。
+- 路由文件组织 `SHOULD` 模块化（基础路由 + 业务模块路由聚合）；动态加载 `SHOULD` 使用懒加载以优化首屏。
+
+示例：
 
 ```js
 import Vue from "vue";
@@ -699,27 +726,49 @@ import VueRouter from "vue-router";
 
 Vue.use(VueRouter);
 
+const routes = [{ path: "/", component: () => import("./pages/Home.vue") }];
+
 export default new VueRouter({
-  routes: [],
+  mode: "hash",
+  routes,
 });
 ```
 
 ## State Management
 
-项目中的状态管理工具，`MUST` 使用 Pinia。
-
-Pinia 的版本 `MUST` 为下面表格中的版本：
+- 状态管理 `MUST` 使用 Pinia；版本 `MUST` 固定为：
 
 | Version |
 | ------- |
 | v2.0.26 |
 
-Pinia 的配置文件 `SHOULD` 添加如下所示的基本配置，`MAY` 根据项目实际情况进行调整。
+- Pinia `MUST` 在应用创建时初始化并注入；Store `SHOULD` 按领域拆分、避免跨域耦合。
+
+示例初始化：
 
 ```js
-import { createPinia } from "pinia";
+import Vue from "vue";
+import { createPinia, PiniaVuePlugin } from "pinia";
 
-export default createPinia();
+Vue.use(PiniaVuePlugin);
+
+const pinia = createPinia();
+export default pinia;
+```
+
+示例 Store：
+
+```js
+import { defineStore } from "pinia";
+
+export const useUserStore = defineStore("user", {
+  state: () => ({ name: "" }),
+  actions: {
+    setName(n) {
+      this.name = n;
+    },
+  },
+});
 ```
 
 ## Ecosystem / Libraries / Utils
@@ -758,3 +807,24 @@ A：暂时不确定，可以通过给 SLS 添加特定的打点，来确定用�
 ## Appendix
 
 ### XMind-style Logic Map (Mermaid mindmap)
+
+### ECMAScript Versions & Features
+
+下表汇总 ECMAScript 各版本与主要特性；每个版本的特性以换行分隔，便于快速查阅与对照兼容策略。
+
+| ECMAScript Version | Key Features |
+| ------------------ | ------------ |
+| ES5                | strict mode<br>JSON<br>Object.create<br>Array extras (map/filter/reduce)<br>Function.bind |
+| ES5.1              | 补充/修订 ES5 语义（JSON 等） |
+| ES2015 (ES6)       | let/const<br>arrow functions<br>classes<br>template literals<br>destructuring<br>default/rest/spread<br>modules (import/export)<br>Promises<br>Map/Set<br>Symbol<br>Proxy/Reflect |
+| ES2016             | Array.prototype.includes<br>Exponentiation operator (`**`) |
+| ES2017             | async/await<br>Object.values / Object.entries<br>Object.getOwnPropertyDescriptors<br>SharedArrayBuffer / Atomics |
+| ES2018             | Object rest/spread<br>async iterators (for await...of)<br>Promise.prototype.finally<br>RegExp: dotAll (`s`) / named groups / lookbehind / Unicode property escapes |
+| ES2019             | Array.prototype.flat / flatMap<br>Object.fromEntries<br>String.prototype.trimStart / trimEnd<br>Symbol.prototype.description |
+| ES2020             | Optional chaining (`?.`)<br>Nullish coalescing (`??`)<br>BigInt<br>dynamic `import()`<br>globalThis<br>Promise.allSettled |
+| ES2021             | Logical assignment (`&&=` / `||=` / `??=`)<br>String.prototype.replaceAll<br>Promise.any<br>WeakRef / FinalizationRegistry |
+| ES2022             | Class fields (public)<br>Private fields/methods/accessors (`#`)<br>Top-level await<br>RegExp match indices (`d`) |
+| ES2023             | Array by copy: `toSorted` / `toReversed` / `toSpliced` / `with`<br>`findLast` / `findLastIndex`<br>Hashbang grammar (`#!`) |
+| ES2024             | `Object.groupBy` / `Map.groupBy`<br>Set methods: `union` / `intersection` / `difference` / `symmetricDifference`<br>`Promise.withResolvers` |
+
+注：Proxy/Reflect `MUST NOT` 期望通过 Polyfill 提供完整行为；如需兼容，`MUST` 通过降级策略与运行时能力检测（feature detection）处理。
