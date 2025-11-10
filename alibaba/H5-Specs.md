@@ -61,7 +61,11 @@ Monorepo 仓库的文件目录结构 `MUST` 遵循如下结构：
 - `packages/` 目录 **MUST** 仅存放库，每个库 **MUST** 具有独立的 `package.json`，并 **SHOULD** 通过 `exports`/`types` 明确入口。
 - `pnpm-workspace.yaml` **MUST** 定义工作空间范围；`README.md` **MUST** 说明仓库结构、开发/发布流程与约定。
 
+---
+
 ## HTML
+
+---
 
 ## CSS
 
@@ -203,6 +207,14 @@ Less 的版本 `MUST` 为下面表格中的版本：
 - 常用模式（圆角、阴影、断点容器等）`SHOULD` 封装为参数化 mixin；mixin `SHOULD NOT` 形成深层依赖链（> 2 层）。
 - 需要运行时切换的主题/品牌色 `SHOULD` 以 CSS 自定义属性（变量）输出，Less 仅负责生成默认值或派生计算。
 
+---
+
+## ECMAScript
+
+项目中的 JavaScript 代码，`MUST` 使用 ECMAScript 2015（ES6）的标准。
+
+---
+
 ## JavaScript Engine & Runtime
 
 ### Development Environment 开发环境
@@ -264,10 +276,6 @@ last 1 chrome version
 last 1 firefox version
 last 1 safari version
 ```
-
-## ECMAScript
-
-项目中的 JavaScript 代码，`MUST` 使用 ECMAScript 2015（ES6）的标准。
 
 ## JavaScript Module System
 
