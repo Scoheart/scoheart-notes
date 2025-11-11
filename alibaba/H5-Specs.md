@@ -579,17 +579,38 @@ tab_width = 2
 
 示例基线（可按项目 `MAY` 调整）：
 
-```json
-{
-  "env": { "browser": true, "es6": true, "node": true },
-  "extends": [
-    "eslint:recommended",
-    "plugin:vue/recommended",
-    "plugin:prettier/recommended"
-  ],
-  "parserOptions": { "ecmaVersion": 2020, "sourceType": "module" },
-  "rules": {}
-}
+```js
+import eslintPluginVue from "eslint-plugin-vue";
+import js from "@eslint/js";
+import globals from "globals";
+
+globals.amap = {
+  AmapApp: "readonly",
+};
+
+export default [
+  // 忽略构建产物
+  {
+    ignores: ["dist/**", "coverage/**", "**/*.min.js", "node_modules/**"],
+  },
+  // javascript
+  {
+    files: ["src/**/*.{js,mjs,cjs}"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: { ...globals.browser, ...globals.amap },
+    },
+    ...js.configs.recommended,
+  },
+  // vue
+  ...eslintPluginVue.configs["flat/vue2-recommended"],
+  // 检查 src 目录下的 Vue 文件
+  // ...eslintPluginVue.configs['flat/recommended'].map((config) => ({
+  //   ...config,
+  //   files: ['src/**/*.vue'],
+  // })),
+];
 ```
 
 - 样式代码检查 `SHOULD` 使用 Stylelint，并 `SHOULD` 采用 `stylelint-config-standard` 与 `stylelint-config-recess-order`；与 CSS 章节的属性顺序规范保持一致。
