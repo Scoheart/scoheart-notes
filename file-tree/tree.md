@@ -13,6 +13,20 @@
 │   └── CSS Framework
 │       └── Less
 ├── ECMAScript & ECMA-262
+│   ├── ECMAScript 3
+│   ├── ECMAScript 5
+│   ├── ECMAScript 2015 (ES6)
+│   ├── ECMAScript 2016
+│   ├── ECMAScript 2017
+│   ├── ECMAScript 2018
+│   ├── ECMAScript 2019
+│   ├── ECMAScript 2020
+│   ├── ECMAScript 2021
+│   ├── ECMAScript 2022
+│   ├── ECMAScript 2023
+│   ├── ECMAScript 2024
+│   ├── ECMAScript 2025
+│   └── ECMAScript 2026
 ├── JavaScript Engine
 │   ├── V8
 │   ├── JavaScriptCore
