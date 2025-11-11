@@ -535,10 +535,24 @@ resolve-peers-from-workspace-root=false
 
 构建工具链 `MUST` 至少包含以下组件：Formatter、Linter、Compiler/Transpiler、Bundler 与 CI 强制策略。各组件 `MUST` 与项目的浏览器兼容策略（见 `.browserslistrc`）与语言/框架选择（Vue 2、Less）保持一致。
 
+### EditorConfig
+
+- 基线配置 `MUST` 如下；项目可根据需要 `MAY` 细化，但 `MUST NOT` 引入不一致的风格于同一仓库。
+
+```ini
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+```
+
 ### Formatters
 
 - 代码格式化 `MUST` 使用 Prettier，并在 CI 中 `MUST` 以只读模式校验（`prettier --check .`）。
-- 基线配置 `SHOULD` 如下；项目可根据需要 `MAY` 细化，但 `MUST NOT` 引入不一致的风格于同一仓库。
+- 基线配置 `MUST` 如下；项目可根据需要 `MAY` 细化，但 `MUST NOT` 引入不一致的风格于同一仓库。
 
 ```json
 {

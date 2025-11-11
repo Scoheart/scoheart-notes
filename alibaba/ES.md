@@ -5,17 +5,17 @@
 ### ES2016
 
 - Array.prototype.includes
-- Exponentiation operator (**)
+- Exponentiation operator (\*\*)
 
 ```js
 // Array.prototype.includes
 const list = [0, 1, 2];
-list.includes(1);        // true
-list.includes(3);        // false
+list.includes(1); // true
+list.includes(3); // false
 
 // Exponentiation operator
-2 ** 3;                  // 8
-Math.pow(2, 3);          // 8 (equivalent)
+2 ** 3; // 8
+Math.pow(2, 3); // 8 (equivalent)
 ```
 
 ### ES2017
@@ -35,8 +35,8 @@ async function fetchUser(id) {
 
 // Object.values / Object.entries
 const obj = { a: 1, b: 2 };
-Object.values(obj);   // [1, 2]
-Object.entries(obj);  // [["a", 1], ["b", 2]]
+Object.values(obj); // [1, 2]
+Object.entries(obj); // [["a", 1], ["b", 2]]
 
 // Object.getOwnPropertyDescriptors
 const descs = Object.getOwnPropertyDescriptors({ x: 1 });
@@ -64,7 +64,9 @@ const next = { ...profile, active: true };
 
 // Async iterators
 async function* stream() {
-  yield 1; yield 2; yield 3;
+  yield 1;
+  yield 2;
+  yield 3;
 }
 (async () => {
   for await (const n of stream()) {
@@ -73,14 +75,17 @@ async function* stream() {
 })();
 
 // Promise.prototype.finally
-fetch("/api").then(handle).catch(log).finally(() => spinner.hide());
+fetch("/api")
+  .then(handle)
+  .catch(log)
+  .finally(() => spinner.hide());
 
 // RegExp features
-"foo\nbar".match(/foo.bar/s);                 // dotAll
+"foo\nbar".match(/foo.bar/s); // dotAll
 const m = "2024-11-05".match(/(?<y>\d{4})-(?<m>\d{2})-(?<d>\d{2})/);
-m.groups.m;                                  // "11" (named groups)
-"abc".match(/(?<=a)b/);                      // lookbehind
-"π".match(/\p{Letter}/u);                   // Unicode property escapes
+m.groups.m; // "11" (named groups)
+"abc".match(/(?<=a)b/); // lookbehind
+"π".match(/\p{Letter}/u); // Unicode property escapes
 ```
 
 ### ES2019
@@ -93,20 +98,23 @@ m.groups.m;                                  // "11" (named groups)
 
 ```js
 // flat / flatMap
-[1, [2, [3]]].flat(2);         // [1, 2, 3]
-[1, 2, 3].flatMap(x => [x, x]); // [1, 1, 2, 2, 3, 3]
+[1, [2, [3]]].flat(2); // [1, 2, 3]
+[1, 2, 3].flatMap((x) => [x, x]); // [1, 1, 2, 2, 3, 3]
 
 // Object.fromEntries
-const pairs = [["a", 1], ["b", 2]];
-Object.fromEntries(pairs);     // { a: 1, b: 2 }
+const pairs = [
+  ["a", 1],
+  ["b", 2],
+];
+Object.fromEntries(pairs); // { a: 1, b: 2 }
 
 // trimStart / trimEnd
-"  hi  ".trimStart();          // "hi  "
-"  hi  ".trimEnd();            // "  hi"
+"  hi  ".trimStart(); // "hi  "
+"  hi  ".trimEnd(); // "  hi"
 
 // Symbol.description
 const s = Symbol("token");
-s.description;                 // "token"
+s.description; // "token"
 
 // Optional catch binding
 try {
@@ -131,7 +139,7 @@ try {
 const city = user?.profile?.address?.city ?? "Unknown";
 
 // BigInt
-const big = 10n ** 20n;        // 100000000000000000000n
+const big = 10n ** 20n; // 100000000000000000000n
 // Mixing BigInt with Number throws:
 // 1n + 1 === TypeError
 
@@ -142,10 +150,7 @@ const { parse } = await import("./parser.js");
 globalThis.appVersion = "1.2.3";
 
 // Promise.allSettled
-const results = await Promise.allSettled([
-  fetch("/a"),
-  fetch("/b"),
-]);
+const results = await Promise.allSettled([fetch("/a"), fetch("/b")]);
 
 // import.meta
 console.log(import.meta.url);
@@ -162,23 +167,20 @@ console.log(import.meta.url);
 ```js
 // Logical assignment
 let a = null;
-a ??= "default";   // "default"
+a ??= "default"; // "default"
 let b = 0;
-b ||= 42;           // 42
+b ||= 42; // 42
 let c = true;
-c &&= false;        // false
+c &&= false; // false
 
 // replaceAll
 "a-b-a".replaceAll("-", ":"); // "a:b:a"
 
 // Promise.any
-const fastest = await Promise.any([
-  fetch("/mirror1"),
-  fetch("/mirror2"),
-]);
+const fastest = await Promise.any([fetch("/mirror1"), fetch("/mirror2")]);
 
 // Numeric separators
-const n = 1_000_000;          // 1000000
+const n = 1_000_000; // 1000000
 
 // WeakRef / FinalizationRegistry
 class Cache {
@@ -203,19 +205,23 @@ class Cache {
 ```js
 // Class fields & private members
 class Counter {
-  #count = 0;               // private field
-  step = 1;                 // public field
-  inc() { this.#count += this.step; }
-  get value() { return this.#count; }
+  #count = 0; // private field
+  step = 1; // public field
+  inc() {
+    this.#count += this.step;
+  }
+  get value() {
+    return this.#count;
+  }
 }
 
 // Top-level await (ESM only)
-const data = await fetch("/config.json").then(r => r.json());
+const data = await fetch("/config.json").then((r) => r.json());
 
 // RegExp match indices
 const re = /(a)(b)/d;
 const match = "ab".match(re);
-match.indices;               // [[0,2],[0,1],[1,2]]
+match.indices; // [[0,2],[0,1],[1,2]]
 
 // Error cause
 try {
@@ -260,23 +266,23 @@ console.log("Hello");
 ```js
 // Object.groupBy / Map.groupBy
 const list = ["aa", "b", "ccc"];
-const byLength = Object.groupBy(list, s => String(s.length));
+const byLength = Object.groupBy(list, (s) => String(s.length));
 // { "1": ["b"], "2": ["aa"], "3": ["ccc"] }
 
 const groups = new Map([
   ["odd", [1, 3]],
   ["even", [2, 4]],
 ]);
-const m = Map.groupBy([1, 2, 3, 4], n => (n % 2 ? "odd" : "even"));
+const m = Map.groupBy([1, 2, 3, 4], (n) => (n % 2 ? "odd" : "even"));
 // Map { "odd" => [1, 3], "even" => [2, 4] }
 
 // Set operations
 const aSet = new Set([1, 2, 3]);
 const bSet = new Set([3, 4]);
-aSet.union(bSet);                 // Set {1, 2, 3, 4}
-aSet.intersection(bSet);          // Set {3}
-aSet.difference(bSet);            // Set {1, 2}
-aSet.symmetricDifference(bSet);   // Set {1, 2, 4}
+aSet.union(bSet); // Set {1, 2, 3, 4}
+aSet.intersection(bSet); // Set {3}
+aSet.difference(bSet); // Set {1, 2}
+aSet.symmetricDifference(bSet); // Set {1, 2, 4}
 
 // Promise.withResolvers
 const { promise, resolve, reject } = Promise.withResolvers();
@@ -291,4 +297,3 @@ await promise; // "done"
 - Top-level await MUST be used only in ESM contexts; CommonJS MUST NOT use top-level await.
 - WeakRef/FinalizationRegistry SHOULD be used sparingly; resource management MUST primarily rely on explicit lifecycles.
 - New Array-by-copy methods SHOULD be preferred when immutability is desired over mutating counterparts.
-
