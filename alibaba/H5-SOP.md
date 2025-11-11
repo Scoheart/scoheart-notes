@@ -19,3 +19,15 @@ pnpm add -D prettier@3.6.2
 2. create **prettier.config.mjs**
 
 configuration details: [Prettier Spec](./H5-Specs.md#formatters)
+
+### ESLint
+
+1. install eslint
+
+```shell
+pnpm add -D eslint@8.57.0
+```
+
+2. create **eslint.config.js**
+
+configuration details: [ESLint Spec](./H5-Specs.md#linters)
