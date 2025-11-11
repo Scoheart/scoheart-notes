@@ -535,10 +535,27 @@ resolve-peers-from-workspace-root=false
 
 构建工具链 `MUST` 至少包含以下组件：Formatter、Linter、Compiler/Transpiler、Bundler 与 CI 强制策略。各组件 `MUST` 与项目的浏览器兼容策略（见 `.browserslistrc`）与语言/框架选择（Vue 2、Less）保持一致。
 
+### EditorConfig
+
+- 基线配置 `MUST` 如下；项目可根据需要 `MAY` 细化，但 `MUST NOT` 引入不一致的风格于同一仓库。
+
+```ini
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+tab_width = 2
+```
+
 ### Formatters
 
 - 代码格式化 `MUST` 使用 Prettier，并在 CI 中 `MUST` 以只读模式校验（`prettier --check .`）。
-- 基线配置 `SHOULD` 如下；项目可根据需要 `MAY` 细化，但 `MUST NOT` 引入不一致的风格于同一仓库。
+- 基线配置 `MUST` 如下；项目可根据需要 `MAY` 细化，但 `MUST NOT` 引入不一致的风格于同一仓库。
 
 ```json
 {
@@ -562,17 +579,38 @@ resolve-peers-from-workspace-root=false
 
 示例基线（可按项目 `MAY` 调整）：
 
-```json
-{
-  "env": { "browser": true, "es6": true, "node": true },
-  "extends": [
-    "eslint:recommended",
-    "plugin:vue/recommended",
-    "plugin:prettier/recommended"
-  ],
-  "parserOptions": { "ecmaVersion": 2020, "sourceType": "module" },
-  "rules": {}
-}
+```js
+import eslintPluginVue from "eslint-plugin-vue";
+import js from "@eslint/js";
+import globals from "globals";
+
+globals.amap = {
+  AmapApp: "readonly",
+};
+
+export default [
+  // 忽略构建产物
+  {
+    ignores: ["dist/**", "coverage/**", "**/*.min.js", "node_modules/**"],
+  },
+  // javascript
+  {
+    files: ["src/**/*.{js,mjs,cjs}"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: { ...globals.browser, ...globals.amap },
+    },
+    ...js.configs.recommended,
+  },
+  // vue
+  ...eslintPluginVue.configs["flat/vue2-recommended"],
+  // 检查 src 目录下的 Vue 文件
+  // ...eslintPluginVue.configs['flat/recommended'].map((config) => ({
+  //   ...config,
+  //   files: ['src/**/*.vue'],
+  // })),
+];
 ```
 
 - 样式代码检查 `SHOULD` 使用 Stylelint，并 `SHOULD` 采用 `stylelint-config-standard` 与 `stylelint-config-recess-order`；与 CSS 章节的属性顺序规范保持一致。
