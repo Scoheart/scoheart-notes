@@ -53,6 +53,11 @@ cmake --build ./build_release
 # 开启REPL
 ./build/bin/hermes
 
+>> var a = 1; var b = 2; var c = a + b;
+undefined
+>> c;
+3
+
 # 运行文件
 ./build/bin/hermes test.js
 ```
