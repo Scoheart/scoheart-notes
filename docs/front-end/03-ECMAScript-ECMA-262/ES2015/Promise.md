@@ -26,7 +26,7 @@ flowchart TD
 
   L --> N{"回调结果?"}
   N -->|"return 非 Promise 值 x"| F3["P2 fulfilled(x)<br/>(错误被处理了)"]
-  N -->|"return Promise q"| G2["P2 跟随 q 的状态"]
+  N -->|"return Promise q"| G2["P2 跟随 q 的状态<br/>q fulfilled ⇒ P2 fulfilled<br/>q rejected ⇒ P2 rejected"]
   N -->|"throw e2"| H2["P2 rejected(e2)"]
 ```
 
