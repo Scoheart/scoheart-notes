@@ -1,0 +1,16 @@
+{
+  "name": "commonjs-example",
+  "version": "1.0.0",
+  "description": "CommonJS 模块化示例",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js"
+  },
+  "keywords": [
+    "commonjs",
+    "module",
+    "nodejs"
+  ],
+  "author": "",
+  "license": "MIT"
+}

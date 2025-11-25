@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ES Modules 模块化示例</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 900px;
+      margin: 50px auto;
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+    h1 {
+      color: #333;
+      border-bottom: 4px solid #667eea;
+      padding-bottom: 10px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .section {
+      margin: 20px 0;
+      padding: 20px;
+      background: #f9f9f9;
+      border-left: 4px solid #667eea;
+      border-radius: 4px;
+    }
+    .result {
+      background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 6px;
+      font-family: 'Monaco', 'Menlo', monospace;
+      border-left: 3px solid #667eea;
+    }
+    code {
+      background: #f4f4f4;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      color: #667eea;
+      font-weight: bold;
+    }
+    .badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-weight: bold;
+      margin: 10px 0;
+      font-size: 14px;
+    }
+    .feature-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      margin: 15px 0;
+    }
+    .feature-item {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      border: 2px solid #667eea;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 15px 0;
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      font-weight: bold;
+    }
+    tr:hover {
+      background: #f5f5f5;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🚀 ES Modules (ESM) 模块化示例</h1>
+    <div class="badge">JavaScript 官方标准 · ES6+</div>
+
+    <div class="section">
+      <h2>📝 说明</h2>
+      <p>本示例展示了 <strong>ES Modules (ESM)</strong> 的使用方式，这是 JavaScript 的官方标准模块系统。</p>
+      <p>使用 <code>&lt;script type="module"&gt;</code> 加载模块。</p>
+      <p>打开浏览器控制台查看详细输出。</p>
+    </div>
+
+    <div class="section">
+      <h2>🧮 计算器模块测试</h2>
+      <div id="calculator-results"></div>
+    </div>
+
+    <div class="section">
+      <h2>📊 日志模块测试</h2>
+      <div id="logger-results"></div>
+    </div>
+
+    <div class="section">
+      <h2>🔧 工具模块测试</h2>
+      <div id="utils-results"></div>
+    </div>
+
+    <div class="section">
+      <h2>💡 ES Modules 关键特点</h2>
+      <div class="feature-list">
+        <div class="feature-item">
+          <strong>✅ 官方标准</strong>
+          <p>JavaScript 语言原生支持</p>
+        </div>
+        <div class="feature-item">
+          <strong>✅ 静态分析</strong>
+          <p>编译时确定依赖关系</p>
+        </div>
+        <div class="feature-item">
+          <strong>✅ Tree-shaking</strong>
+          <p>支持摇树优化，减小体积</p>
+        </div>
+        <div class="feature-item">
+          <strong>✅ 异步加载</strong>
+          <p>不阻塞页面渲染</p>
+        </div>
+        <div class="feature-item">
+          <strong>✅ 语法简洁</strong>
+          <p>import/export 直观易用</p>
+        </div>
+        <div class="feature-item">
+          <strong>✅ 广泛支持</strong>
+          <p>现代浏览器和 Node.js</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>🔄 多种导入导出方式</h2>
+      <h3>导出方式:</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>类型</th>
+            <th>语法示例</th>
+            <th>说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>命名导出</td>
+            <td><code>export const x = 1;</code></td>
+            <td>可以导出多个</td>
+          </tr>
+          <tr>
+            <td>默认导出</td>
+            <td><code>export default MyClass;</code></td>
+            <td>每个模块只能有一个</td>
+          </tr>
+          <tr>
+            <td>聚合导出</td>
+            <td><code>export * from './mod.js';</code></td>
+            <td>重新导出其他模块</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>导入方式:</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>类型</th>
+            <th>语法示例</th>
+            <th>说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>命名导入</td>
+            <td><code>import { x } from './mod.js';</code></td>
+            <td>导入特定的命名导出</td>
+          </tr>
+          <tr>
+            <td>默认导入</td>
+            <td><code>import Mod from './mod.js';</code></td>
+            <td>导入默认导出</td>
+          </tr>
+          <tr>
+            <td>命名空间导入</td>
+            <td><code>import * as Mod from './mod.js';</code></td>
+            <td>导入所有命名导出</td>
+          </tr>
+          <tr>
+            <td>混合导入</td>
+            <td><code>import Mod, { x } from './mod.js';</code></td>
+            <td>同时导入默认和命名</td>
+          </tr>
+          <tr>
+            <td>动态导入</td>
+            <td><code>await import('./mod.js');</code></td>
+            <td>运行时异步加载</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <h2>🆚 ES Modules vs 其他规范</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>特性</th>
+            <th>ES Modules</th>
+            <th>CommonJS</th>
+            <th>AMD/CMD</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>标准化</td>
+            <td>✅ 官方标准</td>
+            <td>❌ 社区规范</td>
+            <td>❌ 社区规范</td>
+          </tr>
+          <tr>
+            <td>静态分析</td>
+            <td>✅ 支持</td>
+            <td>❌ 不支持</td>
+            <td>部分支持</td>
+          </tr>
+          <tr>
+            <td>Tree-shaking</td>
+            <td>✅ 支持</td>
+            <td>❌ 不支持</td>
+            <td>❌ 不支持</td>
+          </tr>
+          <tr>
+            <td>浏览器原生</td>
+            <td>✅ 支持</td>
+            <td>❌ 需要打包</td>
+            <td>需要加载器</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!--
+    重要：type="module" 属性告诉浏览器这是 ES Module
+    ES Modules 默认使用严格模式
+    ES Modules 默认延迟执行（defer）
+  -->
+  <script type="module">
+    // 导入模块（注意：必须包含 .js 扩展名）
+    import Calculator from './calculator.js';
+    import Logger, { info, warn, error, LogLevel } from './logger.js';
+    import * as Utils from './utils.js';
+
+    console.log('========================================');
+    console.log('ES Modules 模块化示例 - 浏览器环境');
+    console.log('========================================\n');
+
+    console.log('📦 模块加载完成 (ES Modules 方式)\n');
+
+    // ==================== 测试日志模块 ====================
+    console.log('📊 测试日志模块:');
+    info('应用启动 (浏览器环境)');
+    warn('这是一个警告信息');
+    error('这是一个错误信息');
+    Logger.debug('这是一个调试信息');
+    console.log('日志总数:', Logger.getLogCount());
+    console.log('');
+
+    // ==================== 测试计算器模块 ====================
+    console.log('🧮 测试计算器模块:');
+    info('开始计算器测试');
+
+    const result1 = Calculator.add(10, 5);
+    console.log('10 + 5 =', result1);
+
+    const result2 = Calculator.multiply(6, 7);
+    console.log('6 * 7 =', result2);
+
+    const result3 = Calculator.divide(100, 4);
+    console.log('100 / 4 =', result3);
+
+    const result4 = Calculator.power(2, 10);
+    console.log('2 ^ 10 =', result4);
+
+    const result5 = Calculator.sqrt(16);
+    console.log('√16 =', result5);
+
+    const result6 = Calculator.mod(17, 5);
+    console.log('17 % 5 =', result6);
+
+    console.log('');
+    console.log('📜 计算历史:');
+    console.table(Calculator.getHistory());
+
+    // ==================== 测试工具模块 ====================
+    console.log('🔧 测试工具模块:');
+    const utilResults = {
+      pi: Utils.PI,
+      e: Utils.E,
+      formatted: Utils.formatNumber(Utils.PI, 4),
+      clamped: Utils.clamp(9999, 0, 100),
+      random: Utils.randomInt(1, 100),
+      sum: Utils.MathUtils.sum(1, 2, 3, 4, 5)
+    };
+    console.table(utilResults);
+
+    // ==================== 更新页面显示 ====================
+    document.getElementById('calculator-results').innerHTML = `
+      <div class="result">10 + 5 = ${result1}</div>
+      <div class="result">6 * 7 = ${result2}</div>
+      <div class="result">100 / 4 = ${result3}</div>
+      <div class="result">2 ^ 10 = ${result4}</div>
+      <div class="result">√16 = ${result5}</div>
+      <div class="result">17 % 5 = ${result6}</div>
+    `;
+
+    document.getElementById('logger-results').innerHTML = `
+      <div class="result">日志总数: ${Logger.getLogCount()}</div>
+      <div class="result">INFO: ${Logger.getLogsByLevel(LogLevel.INFO).length} 条</div>
+      <div class="result">WARN: ${Logger.getLogsByLevel(LogLevel.WARN).length} 条</div>
+      <div class="result">ERROR: ${Logger.getLogsByLevel(LogLevel.ERROR).length} 条</div>
+    `;
+
+    document.getElementById('utils-results').innerHTML = `
+      <div class="result">π = ${utilResults.pi}</div>
+      <div class="result">e = ${utilResults.e}</div>
+      <div class="result">格式化: ${utilResults.formatted}</div>
+      <div class="result">限制范围: ${utilResults.clamped}</div>
+      <div class="result">随机数: ${utilResults.random}</div>
+      <div class="result">数组求和: ${utilResults.sum}</div>
+    `;
+
+    console.log('========================================');
+    console.log('✅ ES Modules 模块化示例完成');
+    console.log('========================================');
+  </script>
+</body>
+</html>

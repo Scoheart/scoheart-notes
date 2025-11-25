@@ -1,0 +1,19 @@
+{
+  "name": "es-modules-example",
+  "version": "1.0.0",
+  "description": "ES Modules 模块化示例",
+  "type": "module",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js"
+  },
+  "keywords": [
+    "esm",
+    "es-modules",
+    "import",
+    "export",
+    "javascript"
+  ],
+  "author": "",
+  "license": "MIT"
+}

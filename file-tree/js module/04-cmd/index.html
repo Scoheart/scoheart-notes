@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CMD 模块化示例</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #333;
+      border-bottom: 3px solid #FF9800;
+      padding-bottom: 10px;
+    }
+    .section {
+      margin: 20px 0;
+      padding: 15px;
+      background: #f9f9f9;
+      border-left: 4px solid #FF9800;
+    }
+    .result {
+      background: #fff3e0;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+    code {
+      background: #f4f4f4;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+    }
+    .loading {
+      color: #FF9800;
+      font-weight: bold;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0;
+    }
+    th, td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background-color: #FF9800;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎯 CMD (Common Module Definition) 模块化示例</h1>
+
+    <div class="section">
+      <h2>📝 说明</h2>
+      <p>本示例展示了如何使用 CMD 规范创建模块化的 JavaScript 代码。</p>
+      <p>CMD 使用 <code>define(function(require, exports, module){})</code> 定义模块。</p>
+      <p>打开浏览器控制台查看详细输出。</p>
+    </div>
+
+    <div class="section">
+      <h2>🧮 计算器模块测试</h2>
+      <div id="calculator-results" class="loading">加载中...</div>
+    </div>
+
+    <div class="section">
+      <h2>📊 日志模块测试</h2>
+      <div id="logger-results" class="loading">加载中...</div>
+    </div>
+
+    <div class="section">
+      <h2>💡 CMD 关键特点</h2>
+      <ul>
+        <li>✅ 使用 <code>define(function(require, exports, module){})</code> 定义模块</li>
+        <li>✅ <strong>依赖就近</strong>：在需要时才 require，不需要提前声明</li>
+        <li>✅ <strong>延迟执行</strong>：模块在被 require 时才执行</li>
+        <li>✅ 语法接近 CommonJS，更易理解</li>
+        <li>✅ 按需加载，性能更好</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>🔄 CMD vs AMD 对比</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>特性</th>
+            <th>AMD (RequireJS)</th>
+            <th>CMD (Sea.js)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>依赖声明</td>
+            <td>依赖前置</td>
+            <td><strong>依赖就近</strong></td>
+          </tr>
+          <tr>
+            <td>执行时机</td>
+            <td>提前执行</td>
+            <td><strong>延迟执行</strong></td>
+          </tr>
+          <tr>
+            <td>语法风格</td>
+            <td>define(['dep'], fn)</td>
+            <td>define(function(require))</td>
+          </tr>
+          <tr>
+            <td>性能</td>
+            <td>可能加载不必要的模块</td>
+            <td><strong>按需加载，性能更好</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <h2>📚 代码示例对比</h2>
+      <h3>AMD (依赖前置):</h3>
+      <pre><code>// 所有依赖必须提前声明
+define(['a', 'b'], function(a, b) {
+  a.doSomething();
+  if (false) {
+    b.doSomething(); // b 也会被加载
+  }
+});</code></pre>
+
+      <h3>CMD (依赖就近):</h3>
+      <pre><code>// 按需加载，需要时才 require
+define(function(require, exports) {
+  var a = require('a');
+  a.doSomething();
+  if (false) {
+    var b = require('b'); // b 不会被加载
+  }
+});</code></pre>
+    </div>
+  </div>
+
+  <!-- 使用 Sea.js 作为模块加载器 -->
+  <script src="https://cdn.jsdelivr.net/npm/seajs@3.0.3/dist/sea.js"></script>
+  <script>
+    // 配置 Sea.js
+    seajs.config({
+      base: './',
+      charset: 'utf-8'
+    });
+
+    // 使用主模块
+    seajs.use('./main');
+  </script>
+</body>
+</html>

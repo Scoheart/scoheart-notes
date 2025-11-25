@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UMD 模块化示例 - AMD 环境</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #333;
+      border-bottom: 3px solid #673AB7;
+      padding-bottom: 10px;
+    }
+    .section {
+      margin: 20px 0;
+      padding: 15px;
+      background: #f9f9f9;
+      border-left: 4px solid #673AB7;
+    }
+    .result {
+      background: #ede7f6;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+    code {
+      background: #f4f4f4;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+    }
+    .env-badge {
+      display: inline-block;
+      background: #673AB7;
+      color: white;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+    .loading {
+      color: #673AB7;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎯 UMD 模块化示例</h1>
+    <div class="env-badge">AMD 环境 (RequireJS)</div>
+
+    <div class="section">
+      <h2>📝 说明</h2>
+      <p>本示例展示了 UMD 模块在 <strong>AMD (RequireJS)</strong> 环境下的使用方式。</p>
+      <p>同一份 UMD 代码，在检测到 RequireJS 后自动适配为 AMD 模块。</p>
+      <p>打开浏览器控制台查看详细输出。</p>
+    </div>
+
+    <div class="section">
+      <h2>🧮 计算器模块测试</h2>
+      <div id="calculator-results" class="loading">加载中...</div>
+    </div>
+
+    <div class="section">
+      <h2>📊 日志模块测试</h2>
+      <div id="logger-results" class="loading">加载中...</div>
+    </div>
+
+    <div class="section">
+      <h2>💡 UMD 自动适配</h2>
+      <p>UMD 模块检测到 <code>define.amd</code> 存在，自动使用 AMD 方式导出：</p>
+      <pre><code>if (typeof define === 'function' && define.amd) {
+  // 使用 AMD 方式 ← 当前环境
+  define([], factory);
+}</code></pre>
+    </div>
+
+    <div class="section">
+      <h2>🌟 一份代码，三种环境</h2>
+      <ul>
+        <li>✅ AMD 环境 (RequireJS) <strong>← 当前</strong></li>
+        <li>✅ CommonJS 环境 (Node.js) - 见 test-commonjs.js</li>
+        <li>✅ 浏览器全局变量 - 见 test-browser.html</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 加载 RequireJS -->
+  <script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.js"></script>
+  <script>
+    // 使用 RequireJS 加载 UMD 模块
+    require(['calculator', 'logger'], function(Calculator, Logger) {
+      console.log('========================================');
+      console.log('UMD 模块化示例 - AMD 环境 (RequireJS)');
+      console.log('========================================\n');
+
+      console.log('📦 模块加载完成 (AMD 方式)');
+      console.log('✅ Calculator 模块已通过 RequireJS 加载');
+      console.log('✅ Logger 模块已通过 RequireJS 加载');
+      console.log('');
+
+      // ==================== 测试日志模块 ====================
+      console.log('📊 测试日志模块:');
+      Logger.info('应用启动 (AMD 环境)');
+      Logger.warn('这是一个警告信息');
+      Logger.error('这是一个错误信息');
+      Logger.debug('这是一个调试信息');
+      console.log('日志总数:', Logger.getLogCount());
+      console.log('');
+
+      // ==================== 测试计算器模块 ====================
+      console.log('🧮 测试计算器模块:');
+      Logger.info('开始计算器测试');
+
+      const result1 = Calculator.add(10, 5);
+      console.log('10 + 5 =', result1);
+      Logger.info('加法运算: 10 + 5 = ' + result1);
+
+      const result2 = Calculator.subtract(20, 8);
+      console.log('20 - 8 =', result2);
+      Logger.info('减法运算: 20 - 8 = ' + result2);
+
+      const result3 = Calculator.multiply(6, 7);
+      console.log('6 * 7 =', result3);
+      Logger.info('乘法运算: 6 * 7 = ' + result3);
+
+      const result4 = Calculator.divide(100, 4);
+      console.log('100 / 4 =', result4);
+      Logger.info('除法运算: 100 / 4 = ' + result4);
+
+      const result5 = Calculator.power(2, 10);
+      console.log('2 ^ 10 =', result5);
+      Logger.info('幂运算: 2 ^ 10 = ' + result5);
+
+      const result6 = Calculator.sqrt(16);
+      console.log('√16 =', result6);
+      Logger.info('平方根: √16 = ' + result6);
+
+      const result7 = Calculator.mod(17, 5);
+      console.log('17 % 5 =', result7);
+      Logger.info('取模运算: 17 % 5 = ' + result7);
+
+      console.log('');
+      console.log('📜 计算器版本:', Calculator.getVersion());
+      console.log('📜 计算历史:');
+      console.table(Calculator.getHistory());
+
+      // ==================== 测试错误处理 ====================
+      console.log('⚠️ 测试错误处理:');
+      try {
+        Calculator.divide(10, 0);
+      } catch (e) {
+        console.error('捕获到错误:', e.message);
+        Logger.error('除零错误: ' + e.message);
+      }
+
+      try {
+        Calculator.sqrt(-1);
+      } catch (e) {
+        console.error('捕获到错误:', e.message);
+        Logger.error('负数开方错误: ' + e.message);
+      }
+
+      // ==================== 查看所有日志 ====================
+      console.log('');
+      console.log('📊 所有日志记录:');
+      console.table(Logger.getLogs());
+
+      console.log('');
+      console.log('📈 日志统计:');
+      console.log('  - INFO: ', Logger.getLogsByLevel(Logger.LogLevel.INFO).length, '条');
+      console.log('  - WARN: ', Logger.getLogsByLevel(Logger.LogLevel.WARN).length, '条');
+      console.log('  - ERROR:', Logger.getLogsByLevel(Logger.LogLevel.ERROR).length, '条');
+      console.log('  - DEBUG:', Logger.getLogsByLevel(Logger.LogLevel.DEBUG).length, '条');
+
+      // ==================== UMD 特性说明 ====================
+      console.log('');
+      console.log('💡 UMD 特性:');
+      console.log('  ✅ 当前环境: AMD (RequireJS)');
+      console.log('  ✅ 同一份 UMD 代码自动适配');
+      console.log('  ✅ 检测到 define.amd，使用 AMD 导出');
+      console.log('  ✅ 无需修改代码，自动兼容多环境');
+
+      // ==================== 更新页面显示 ====================
+      document.getElementById('calculator-results').innerHTML = `
+        <div class="result">加法: 10 + 5 = ${result1}</div>
+        <div class="result">减法: 20 - 8 = ${result2}</div>
+        <div class="result">乘法: 6 * 7 = ${result3}</div>
+        <div class="result">除法: 100 / 4 = ${result4}</div>
+        <div class="result">幂运算: 2 ^ 10 = ${result5}</div>
+        <div class="result">平方根: √16 = ${result6}</div>
+        <div class="result">取模: 17 % 5 = ${result7}</div>
+        <div class="result">版本: ${Calculator.getVersion()}</div>
+      `;
+
+      document.getElementById('logger-results').innerHTML = `
+        <div class="result">日志总数: ${Logger.getLogCount()}</div>
+        <div class="result">INFO 日志数: ${Logger.getLogsByLevel(Logger.LogLevel.INFO).length}</div>
+        <div class="result">WARN 日志数: ${Logger.getLogsByLevel(Logger.LogLevel.WARN).length}</div>
+        <div class="result">ERROR 日志数: ${Logger.getLogsByLevel(Logger.LogLevel.ERROR).length}</div>
+        <div class="result">DEBUG 日志数: ${Logger.getLogsByLevel(Logger.LogLevel.DEBUG).length}</div>
+      `;
+
+      console.log('');
+      console.log('========================================');
+      console.log('✅ UMD 模块化示例完成 (AMD 环境)');
+      console.log('========================================');
+    });
+  </script>
+</body>
+</html>

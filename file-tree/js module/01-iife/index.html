@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IIFE 模块化示例</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #333;
+      border-bottom: 3px solid #4CAF50;
+      padding-bottom: 10px;
+    }
+    .section {
+      margin: 20px 0;
+      padding: 15px;
+      background: #f9f9f9;
+      border-left: 4px solid #4CAF50;
+    }
+    .result {
+      background: #e8f5e9;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+    code {
+      background: #f4f4f4;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎯 IIFE (立即执行函数表达式) 模块化示例</h1>
+
+    <div class="section">
+      <h2>📝 说明</h2>
+      <p>本示例展示了如何使用 IIFE 模式创建模块化的 JavaScript 代码。</p>
+      <p>打开浏览器控制台查看详细输出。</p>
+    </div>
+
+    <div class="section">
+      <h2>🧮 计算器模块测试</h2>
+      <div id="calculator-results"></div>
+    </div>
+
+    <div class="section">
+      <h2>📊 日志模块测试</h2>
+      <div id="logger-results"></div>
+    </div>
+
+    <div class="section">
+      <h2>💡 关键特点</h2>
+      <ul>
+        <li>✅ 使用函数作用域隔离变量</li>
+        <li>✅ 避免全局命名空间污染</li>
+        <li>✅ 通过返回对象暴露公共 API</li>
+        <li>⚠️ 需要手动管理模块加载顺序</li>
+        <li>⚠️ 模块依赖关系不够清晰</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 注意：加载顺序很重要！必须先加载模块，再使用 -->
+  <script src="calculator.js"></script>
+  <script src="logger.js"></script>
+  <script>
+    console.log('========================================');
+    console.log('IIFE 模块化示例');
+    console.log('========================================\n');
+
+    // 测试日志模块
+    console.log('📊 测试日志模块:');
+    Logger.info('应用启动');
+    Logger.warn('这是一个警告信息');
+    Logger.error('这是一个错误信息');
+    console.log('日志总数:', Logger.getLogCount());
+    console.log('');
+
+    // 测试计算器模块
+    console.log('🧮 测试计算器模块:');
+    Logger.info('开始计算器测试');
+
+    var result1 = Calculator.add(10, 5);
+    console.log('10 + 5 =', result1);
+    Logger.info('加法运算: 10 + 5 = ' + result1);
+
+    var result2 = Calculator.subtract(20, 8);
+    console.log('20 - 8 =', result2);
+    Logger.info('减法运算: 20 - 8 = ' + result2);
+
+    var result3 = Calculator.multiply(6, 7);
+    console.log('6 * 7 =', result3);
+    Logger.info('乘法运算: 6 * 7 = ' + result3);
+
+    var result4 = Calculator.divide(100, 4);
+    console.log('100 / 4 =', result4);
+    Logger.info('除法运算: 100 / 4 = ' + result4);
+
+    console.log('');
+    console.log('📜 计算器版本:', Calculator.getVersion());
+    console.log('📜 计算历史:', Calculator.getHistory());
+    console.log('');
+
+    // 测试错误处理
+    console.log('⚠️ 测试错误处理:');
+    try {
+      Calculator.divide(10, 0);
+    } catch (e) {
+      console.error('捕获到错误:', e.message);
+      Logger.error('除零错误: ' + e.message);
+    }
+
+    console.log('');
+    console.log('📊 所有日志记录:');
+    console.table(Logger.getLogs());
+
+    // 更新页面显示
+    document.getElementById('calculator-results').innerHTML = `
+      <div class="result">加法: 10 + 5 = ${result1}</div>
+      <div class="result">减法: 20 - 8 = ${result2}</div>
+      <div class="result">乘法: 6 * 7 = ${result3}</div>
+      <div class="result">除法: 100 / 4 = ${result4}</div>
+      <div class="result">版本: ${Calculator.getVersion()}</div>
+    `;
+
+    document.getElementById('logger-results').innerHTML = `
+      <div class="result">日志总数: ${Logger.getLogCount()}</div>
+      <div class="result">INFO 日志数: ${Logger.getLogsByLevel('INFO').length}</div>
+      <div class="result">WARN 日志数: ${Logger.getLogsByLevel('WARN').length}</div>
+      <div class="result">ERROR 日志数: ${Logger.getLogsByLevel('ERROR').length}</div>
+    `;
+
+    console.log('========================================');
+    console.log('✅ IIFE 模块化示例完成');
+    console.log('========================================');
+  </script>
+</body>
+</html>
