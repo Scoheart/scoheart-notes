@@ -1,2 +1,0 @@
-- pnpm store path 寻找全局包安装路径
--
