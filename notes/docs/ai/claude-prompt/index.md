@@ -91,3 +91,16 @@ JavaScript 有哪些包管理器？
 Beyoncé 是一名歌手，问 claude 的时候，她还没有第八张专辑。
 
 ### Prospectus Hallucination
+
+
+```mermaid
+mindmap
+  root((Prompt))
+    clear("Being Clear and Direct")
+    role("Assigning Roles - Role Prompting")
+    data("Separating Data from Instructions")
+    format("Formatting Output & Speaking for Claude")
+    think("precognition - Thinking Step by Step")
+    fewshot("Few-Shot Prompting")
+    hallucination("Avoiding Hallucinations")
+```
