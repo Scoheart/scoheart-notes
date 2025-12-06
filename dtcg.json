@@ -1,0 +1,33 @@
+{
+  "color": {
+    "$type": "color",
+    "palette": {
+      "blue": {
+        "100": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [1, 0, 1],
+            "alpha": 1,
+            "hex": "#ff00ff"
+          }
+        },
+        "500": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.15, 0.56, 0.42],
+            "alpha": 1,
+            "hex": "#268f6b"
+          }
+        },
+        "600": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.07, 0.5, 0.36],
+            "alpha": 1,
+            "hex": "#12805c"
+          }
+        }
+      }
+    }
+  }
+}
