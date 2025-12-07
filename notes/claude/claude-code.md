@@ -32,6 +32,9 @@ Claude Code 内置了一些斜杠指令，我们可以直接使用。
 ```markdown
 ---
 description: "Explain a shell command"
+argument-hint: "The command to explain"
+model: "claude_sonnet4_5"
+disable-model-invocation: true
 ---
 
 # Explain Shell Command
@@ -58,13 +61,64 @@ Format your response with clear sections and use code blocks for command example
 The command to explain is: {{$ARGUMENTS}}
 ```
 
+#### Frontmatter
+
+用 YAML frontmatter 提供元数据，比如
+
+- description: 命令的描述
+- allowed-tools: 允许使用的工具
+- argument-hint: 参数提示
+- model: 使用的模型
+- disable-model-invocation: 是否禁止 SlashCommand tool 自动调用这个命令
+
+```yaml
+---
+description: "Explain a shell command"
+allowed-tools: Bash(ls:*)
+---
+```
+
 #### 命名空间
 
 用子目录来整理命令文件
 
 ```bash
-.claude/commands/frontend/component.md
+.claude/commands/shell/explain-cmd.md
 ```
+
+#### 参数占位符 Arguments
+
+- $ARGUMENTS 把你输入命令时所有的参数原样塞进去
+- $1, $2, $3, ... 像 shell 一样，按位置取参数
+
+```bash
+/explain-cmd ls
+```
+
+#### 执行命令 Bash command execution
+
+可以在命令前面用 `!` 执行 bash 命令，把输出加入上下文。
+
+```markdown
+---
+allowed-tools: Bash(git add:*), Bash(git status:*), Bash(git commit:*)
+description: Create a git commit
+---
+
+## Context
+
+- Current git status: !`git status`
+- Current git diff: !`git diff HEAD`
+- Current branch: !`git branch --show-current`
+
+## Your task
+
+Based on the above changes, create a single git commit.
+```
+
+#### 执行命令 Bash command execution
+
+可以在命令前面用 ! 执行 bash，把输出加入上下文。
 
 ## 子代理 Subagents
 
