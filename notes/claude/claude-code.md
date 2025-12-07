@@ -1,6 +1,53 @@
-# Claude Code 进阶用法
+# Claude Code 使用分享
 
-## Slash commands
+## 基本安装与使用
+
+### Install
+
+通过安装脚本安装：
+
+```bash
+curl -fsSL https://claude.ai/install.sh | bash
+```
+
+通过 npm 安装：
+
+```bash
+npm install -g @anthropic-ai/claude-code
+```
+
+### 使用
+
+进入项目目录，启动 Claude Code。
+
+```bash
+cd /path/to/your/project
+claude
+```
+
+提出第一个问题。
+
+```bash
+> what can Claude Code do?
+```
+
+让 Claude Code 帮我们修改代码。
+
+```bash
+> add a hello world function to the main file
+```
+
+## Use Claude as a unix-style utility
+
+把 Claude 作为 unix-style 工具使用。
+
+```bash
+claude -p '查看我本地有哪些 docker images'
+
+claude -p '哪个进程占用了我的 8088 端口'
+```
+
+## 斜杠指令 Slash commands
 
 简单说：slash commands（斜杠命令）就是在 Claude Code 里，以 / 开头的一种“快捷指令”，用来快速执行特定任务或预先写好的提示词，从而控制 Claude 在当前对话里的行为。
 
@@ -120,6 +167,14 @@ Based on the above changes, create a single git commit.
 
 可以在命令前面用 ! 执行 bash，把输出加入上下文。
 
+#### 文件引用 File references
+
+用 `@` 引用文件内容。
+
+#### 扩展思考 Thinking mode
+
+使用 extended thinking keywords 来引导 Claude 进行更加深入的思考。
+
 ## 子代理 Subagents
 
 Claude Code 的 subagent = 在 Claude Code 里预先配置好的“小号 AI 助手”，Claude Code 可以把合适的任务丢给它去干。
@@ -198,7 +253,7 @@ Claude Code 内置了一些 subagent，我们可以直接使用。
 这个 subagent 用来帮助我们规划 Claude Code 的执行计划。
 
 ```bash
-帮我规划一个 Vue 3 的组件。
+帮我规划一个从 vue-cli-service 迁移到 vite 的迁移方案。
 ```
 
 #### Explore
@@ -214,16 +269,12 @@ Claude Code 内置了一些 subagent，我们可以直接使用。
 这个 subagent 用来帮助我们设置 Claude Code 的 statusline。
 
 ```bash
-> 帮我设置一下 Claude Code 的 statusline。
+帮我设置一下 Claude Code 的 statusline。
 ```
 
 #### general-purpose
 
 这个 subagent 用来帮助我们处理一些通用的任务。
-
-```bash
-> 帮我处理一些通用的任务。
-```
 
 ### 进阶用法 Advanced Usage
 
@@ -243,6 +294,76 @@ Change the project’s build tool to the Vite toolchain.
 </tasks>
 ```
 
+## 钩子 Hooks
+
+Claude Code 的 Hooks 本质上是：在 Claude Code 生命周期的不同阶段自动执行的一组 shell 命令，用来做“确定性、可编程的行为控制”，而不是靠提示语让模型“自觉遵守”。
+
+为什么用 Hooks 而不是 Prompt？
+
+- Prompt 是“建议”，不一定每次都严格执行；
+- Hook 是实际运行的程序逻辑，只要配置了就一定会跑，可测试、可版本管理。
+
+### Hook Events Overview
+
+Claude Code 提供了多种钩子事件，可以在不同的阶段执行不同的操作。
+
+- PreToolUse
+- PermissionRequest
+- PostToolUse
+- UserPromptSubmit
+- Notification
+- Stop
+- SubagentStop
+- PreCompact
+- SessionStart
+- SessionEnd
+
+### Hooks 配置
+
+### 通知 Hook（桌面通知）
+
+```json
+{
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "osascript -e 'display notification \"Claude Code 完成任务🚀\" with title \"Claude Code\"'"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+#### Javascript 代码格式化 Hook
+
+目标是：每次 Edit/Write 工具写完文件后，如果是 .js 文件，就自动跑 prettier。
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path' | { read file_path; if echo \"$file_path\" | grep -q '\\.js$'; then npx prettier --write \"$file_path\"; fi; }"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
 ## 附录 Appendix
 
 [Claude Code: Best practices for agentic coding](https://www.anthropic.com/engineering/claude-code-best-practices)
+
+[Awesome Claude Skills](https://github.com/travisvn/awesome-claude-skills)
