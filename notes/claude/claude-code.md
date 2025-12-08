@@ -45,6 +45,58 @@ claude
 claude -p '查看我本地有哪些 docker images'
 
 claude -p '哪个进程占用了我的 8088 端口'
+
+ps aux | claude -p "找出占用 CPU 最高的三个进程，并说明可能原因".
+```
+
+## Git worktree
+
+利用 Git worktree 管理多个分支的代码。
+
+基础用法：
+
+```bash
+# 创建一个新工作目录，并切换到该目录，会自动切换到目录同名的新分支
+git worktree add <path>
+
+# 显示指定分支, 默认以你当前所在分支的 HEAD 为基础 创建新分支
+# git worktree add -b <branch> <path> HEAD
+git worktree add -b <branch> <path>
+```
+
+### 工作流对比
+
+传统方式:
+
+```bash
+git stash # 保存当前工作
+git checkout main # 切换分支
+
+# 修复 bug...
+
+git checkout feature # 切回原分支
+git stash pop # 恢复工作
+```
+
+```bash
+使用 worktree:
+# 等价于 git worktree add -b hotfix ../hotfix
+# git branch --show-current
+# git worktree add -b hotfix-issue-123 ../hotfix main
+git worktree add ../hotfix
+cd ../hotfix
+
+# 修复 bug...
+
+cd - # 原工作目录保持不变
+```
+
+然后就可以用 Git worktree 把同一个仓库“分身”成多个工作目录，然后在每个目录里开一个独立的 claude 会话，这样你可以同时让多个 Claude Code 实例在不同分支上干活，互不干扰。
+
+```bash
+git worktree add -b feature/1234567890 ../feature/1234567890 main
+
+claude
 ```
 
 ## 斜杠指令 Slash commands
@@ -242,7 +294,7 @@ Claude Code 内置了一些 subagent，我们可以直接使用。
 
 #### claude-code-guide
 
-这个 subagent 用来帮助我们理解 Claude Code 的相关概念和基础用法。
+claude-code-guide subagent 用来帮助我们理解 Claude Code 的相关概念和基础用法。
 
 ```bash
 指导我如何使用 Claude Code。
@@ -250,7 +302,7 @@ Claude Code 内置了一些 subagent，我们可以直接使用。
 
 #### Plan
 
-这个 subagent 用来帮助我们规划 Claude Code 的执行计划。
+Plan subagent 让 Claude Code 可以按照我们的 prompt 意图，生成执行计划。
 
 ```bash
 帮我规划一个从 vue-cli-service 迁移到 vite 的迁移方案。
@@ -258,7 +310,7 @@ Claude Code 内置了一些 subagent，我们可以直接使用。
 
 #### Explore
 
-这个 subagent 用来帮助我们探索 Claude Code 的代码库。
+Explore subagent 用来帮助我们探索代码库。
 
 ```bash
 帮我查找【出行分】页面的相关的代码文件
@@ -266,7 +318,7 @@ Claude Code 内置了一些 subagent，我们可以直接使用。
 
 #### statusline-setup
 
-这个 subagent 用来帮助我们设置 Claude Code 的 statusline。
+statusline-setup subagent 用来帮助我们设置 Claude Code 的 statusline。
 
 ```bash
 帮我设置一下 Claude Code 的 statusline。
@@ -274,7 +326,7 @@ Claude Code 内置了一些 subagent，我们可以直接使用。
 
 #### general-purpose
 
-这个 subagent 用来帮助我们处理一些通用的任务。
+general-purpose subagent 是 Claude Code 的通用子代理，可以处理各种任务。
 
 ### 进阶用法 Advanced Usage
 
@@ -361,6 +413,12 @@ Claude Code 提供了多种钩子事件，可以在不同的阶段执行不同�
   }
 }
 ```
+
+## 插件与插件市场 Plugins & Marketplace
+
+插件是 Claude Code 的扩展机制，可以让我们扩展 Claude Code 的功能。
+
+插件市场是 Claude Code 的插件的一个集合，用户可以添加一个插件市场，然后在这个市场里寻找自己想要的插件。也可以安装其他众多的插件市场，然后在不同的市场选择自己想要的插件安装使用。
 
 ## 附录 Appendix
 
