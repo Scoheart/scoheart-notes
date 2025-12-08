@@ -238,9 +238,13 @@ Claude Code 的 subagent = 在 Claude Code 里预先配置好的“小号 AI 助
 
 Claude 在处理任务时，如果发现“这个活刚好匹配某个 subagent 的专长”，就会把任务委托给它，让它单独跑一趟，再把结果返回来。
 
+subagents 的作用：
+
 - 专业化
 - 可复用
 - 上下文隔离
+
+subagents 依赖于 Task tool，Task tool 是 Claude Code Built-in tool，用于启动子代理。
 
 ```json
  {
@@ -312,8 +316,18 @@ Plan subagent 让 Claude Code 可以按照我们的 prompt 意图，生成执行
 
 Explore subagent 用来帮助我们探索代码库。
 
+可以通过 prompt 指定探索的深度。
+
+- quick: 快速探索
+- medium: 中等探索，平衡速度和彻底性
+- very thorough: 深度探索，对多处位置及不同命名方式进行全面分析，适用于目标可能藏在非预期位置的场景
+
+- quick: 快速探索
+- medium: 中等探索
+- very thorough: 深度探索
+
 ```bash
-帮我查找【出行分】页面的相关的代码文件
+Invokes Explore subagent with "medium" thoroughness，帮我查找【出行分】页面的相关的代码文件
 ```
 
 #### statusline-setup
